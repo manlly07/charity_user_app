@@ -5,5 +5,5 @@ export default {
   is_public: false,
   component: lazy(() => import('.')),
   layout: 'blank',
-  title: 'SkyJourney | Login'
+  title: 'Volunteer Hub | Login'
 }

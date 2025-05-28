@@ -3,7 +3,7 @@ type Props = {
 }
 
 const Blank = (props: Props) => {
-  return <>{props.children}</>
+  return <div className="w-screen h-screen">{props.children}</div>
 }
 
 export default Blank
