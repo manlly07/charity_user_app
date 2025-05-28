@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  admin-app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: pi-admin-app
+    restart: always
+    environment:
+      PUBLIC_API: ${PUBLIC_API}
+    ports:
+      - "8089:3000"
