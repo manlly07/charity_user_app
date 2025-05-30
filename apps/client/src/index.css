@@ -6,6 +6,8 @@
 :root {
   --primary-custom-color: #4CAF50;
   --border-input-color: rgba(76, 175, 80, 0.5);
+  --main-bg-color: #ffffff;
+  --text-custom-color: #374151;
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -43,6 +45,8 @@
 @theme inline {
   --color-primary-custom-color: var(--primary-custom-color);
   --color-border-input-color: var(--border-input-color);
+  --color-main-bg-color: var(--main-bg-color);
+  --color-text-custom-color: var(--text-custom-color);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);

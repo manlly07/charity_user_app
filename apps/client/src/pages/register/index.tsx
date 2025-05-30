@@ -13,20 +13,32 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router'
 import { z } from 'zod'
+
+const vietnamPhoneRegex = /^(0|\+84)(3|5|7|8|9)[0-9]{8}$/
 const FormSchema = z.object({
-  email: z.string().trim().email().max(255, 'Email must be at most 255 characters long'),
-  password: z
+  fullName: z
     .string()
     .trim()
-    .min(6, 'Password must be at least 6 characters long')
-    .max(255, 'Password must be at most 255 characters long')
+    .min(2, 'Full Name phải có ít nhất 2 ký tự')
+    .max(50, 'Full Name tối đa 50 ký tự'),
+
+  email: z.string().trim().email('Email không hợp lệ'),
+
+  phoneNumber: z
+    .string()
+    .trim()
+    .regex(vietnamPhoneRegex, 'Số điện thoại không đúng định dạng Việt Nam'),
+
+  password: z.string().trim().min(8, 'Mật khẩu phải có ít nhất 8 ký tự')
 })
 
 const Login = () => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
+      fullName: '',
       email: '',
+      phoneNumber: '',
       password: ''
     }
   })
@@ -39,8 +51,8 @@ const Login = () => {
       <div className="login-form flex-1 flex items-center justify-center p-6">
         <div className="space-y-8 w-[440px]">
           <div className="space-y-3 text-center">
-            <h3 className="scroll-m-20 text-3xl font-bold tracking-tight">Welcome Back</h3>
-            <p className="text-base text-[#4B5563]">Login to continue your journey of giving</p>
+            <h3 className="scroll-m-20 text-3xl font-bold tracking-tight">Create Account</h3>
+            <p className="text-base text-[#4B5563]">Join our community of changemakers</p>
           </div>
           <Form {...form}>
             <form onSubmit={form.handleSubmit((data) => console.log(data))} className="space-y-6">
@@ -49,9 +61,35 @@ const Login = () => {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
+                    <FormLabel>Full Name</FormLabel>
+                    <FormControl>
+                      <InputCustom type="text" placeholder="Enter your name" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
                     <FormLabel>Email address</FormLabel>
                     <FormControl>
                       <InputCustom type="email" placeholder="Enter your email" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Phone Number</FormLabel>
+                    <FormControl>
+                      <InputCustom type="text" placeholder="Enter your phone number" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -75,7 +113,7 @@ const Login = () => {
                 size={'lg'}
                 className="bg-primary-custom-color hover:bg-primary-custom-color/80 w-full shadow-lg shadow-primary-custom-color/20"
               >
-                Login
+                Sign up
               </Button>
             </form>
           </Form>
@@ -105,12 +143,9 @@ const Login = () => {
             </Button>
           </div>
           <div className="text-center text-sm text-[#4B5563]">
-            Don’t have an account?{' '}
-            <Link
-              to="/register"
-              className="text-primary-custom-color hover:underline font-semibold"
-            >
-              Sign up
+            Already have an account?{' '}
+            <Link to="/login" className="text-primary-custom-color hover:underline font-semibold">
+              Sign in
             </Link>
           </div>
         </div>
