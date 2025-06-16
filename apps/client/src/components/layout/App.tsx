@@ -1,4 +1,5 @@
 import Headers from '../headers'
+import SubHeader from '../SubHeader'
 
 type Props = {
   children: React.ReactNode
@@ -6,8 +7,9 @@ type Props = {
 
 const App = (props: Props) => {
   return (
-    <div className="w-screen min-h-screen">
+    <div className="max-w-screen min-h-screen">
       <Headers />
+      <SubHeader />
       {props.children}
     </div>
   )

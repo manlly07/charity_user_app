@@ -1,21 +1,36 @@
 import { Link } from 'react-router'
 import { Button } from '../ui/button'
 
+const Menu = [
+  {
+    name: 'News Feed',
+    link: '/'
+  },
+  {
+    name: 'Donate',
+    link: '/donate'
+  },
+  {
+    name: 'My Account',
+    link: '/profile'
+  }
+]
+
 const Headers = () => {
   return (
     <header className="w-full">
       <div className="max-w-[1440px] w-full m-auto flex items-center justify-between bg-main-bg-color py-4 px-6">
-        <span className="text-primary-custom-color font-semibold">VolunteerHub</span>
+        <span className="text-primary-custom-color font-semibold text-2xl">VolunteerHub</span>
         <div className="flex items-center justify-content-center gap-8 text-base">
-          <Link to="" className="text-sm text-text-custom-color hover:text-primary-custom-color">
-            News Feed
-          </Link>
-          <Link to="" className="text-sm text-text-custom-color hover:text-primary-custom-color">
-            Donate
-          </Link>
-          <Link to="" className="text-sm text-text-custom-color hover:text-primary-custom-color">
-            My Account
-          </Link>
+          {Menu.map((item, index) => (
+            <Link
+              key={index}
+              to={item.link}
+              className="text-sm text-text-custom-color hover:text-primary-custom-color transition-all duration-300"
+            >
+              {item.name}
+            </Link>
+          ))}
         </div>
         <Button
           size={'sm'}

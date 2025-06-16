@@ -6,6 +6,10 @@
 :root {
   --primary-custom-color: #4CAF50;
   --border-input-color: rgba(76, 175, 80, 0.5);
+  --secondary-custom-color: #FFCA28;
+  --secondary-bg-color: #F9FAFB;
+  --text-secondary: #4B5563;
+
   --main-bg-color: #ffffff;
   --text-custom-color: #374151;
   --radius: 0.625rem;
@@ -45,6 +49,10 @@
 @theme inline {
   --color-primary-custom-color: var(--primary-custom-color);
   --color-border-input-color: var(--border-input-color);
+  --color-secondary-custom-color: var(--secondary-custom-color);
+  --color-secondary-bg-color: var(--secondary-bg-color);
+  --color-text-secondary: var(--text-secondary)
+
   --color-main-bg-color: var(--main-bg-color);
   --color-text-custom-color: var(--text-custom-color);
   --radius-sm: calc(var(--radius) - 4px);
@@ -122,7 +130,7 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-ring/50 box-border;
   }
   body {
     @apply bg-background text-foreground;

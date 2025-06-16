@@ -1,3 +1,8 @@
+export { default as Charity } from './charity'
+export { default as DonateItem } from './donate'
+export { default as FollowIcon } from './follow'
 export { default as Headers } from './headers'
 export { default as InputCustom } from './Input'
+export { default as OrganizeFollow } from './organize'
+export { default as UpcomingEvent } from './upcoming'
 export { default as View } from './view'

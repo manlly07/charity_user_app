@@ -1,8 +1,8 @@
-import { Charity, OrganizeFollow, UpcomingEvent } from '@/components'
+import { DonateItem, OrganizeFollow, UpcomingEvent } from '@/components'
 
 type Props = {}
 
-const Home = (props: Props) => {
+const Donate = (props: Props) => {
   return (
     <div className="max-w-[1440px] w-full m-auto py-8 px-6">
       <div className="grid grid-cols-4 gap-6">
@@ -11,10 +11,14 @@ const Home = (props: Props) => {
             <OrganizeFollow />
           </div>
         </div>
-        <div className="col-span-2 space-y-8">
-          {Array.from({ length: 2 }).map((_, index) => (
-            <Charity key={index} />
-          ))}
+        <div className="col-span-2">
+          <div className="grid grid-cols-2 gap-2">
+            {Array.from({ length: 10 }).map((_, index) => (
+              <div className="col-span-1">
+                <DonateItem />
+              </div>
+            ))}
+          </div>
         </div>
         <div className="col-span-1">
           <div className="sticky top-0">
@@ -26,4 +30,4 @@ const Home = (props: Props) => {
   )
 }
 
-export default Home
+export default Donate
