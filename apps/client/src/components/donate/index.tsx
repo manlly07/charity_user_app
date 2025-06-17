@@ -1,14 +1,18 @@
 import { Banner1 } from '@/assets'
 import { CalendarIcon } from '@radix-ui/react-icons'
 import { Progress } from '@radix-ui/themes'
+import { Link } from 'react-router'
 import { Button } from '../ui/button'
 
 const DonateItem = () => {
   return (
     <div className="shadow rounded-lg">
-      <div className="image h-[180px] w-full rounded-t-lg overflow-hidden">
+      <Link
+        to={'/organize/donate/1'}
+        className="image block h-[180px] w-full rounded-t-lg overflow-hidden"
+      >
         <img src={Banner1} alt="Banner" className="w-full h-full object-cover " />
-      </div>
+      </Link>
       <div className="p-4 space-y-3.5">
         <h4 className="text-lg font-medium mb-0">Clean Ocean Initiative</h4>
         <p className="text-[#4B5563] text-sm">

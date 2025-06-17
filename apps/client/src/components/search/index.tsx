@@ -4,13 +4,17 @@ import InputWithIcon from '../InputIcon'
 
 type Props = {
   className?: string
+  placeholder?: string
 }
 
-const SearchInput = ({ className }: Props) => {
+const SearchInput = ({
+  className,
+  placeholder = 'Search for volunteer organizations...'
+}: Props) => {
   return (
     <div className={cn('w-full', className)}>
       <InputWithIcon
-        placeholder="Search for volunteer organizations..."
+        placeholder={placeholder}
         startIcon={<MagnifyingGlassIcon width="18" height="18" />}
       />
     </div>
