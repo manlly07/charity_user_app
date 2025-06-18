@@ -11,8 +11,6 @@ import {
 } from '@radix-ui/react-icons'
 import { Avatar, Badge, Progress } from '@radix-ui/themes'
 
-type Props = {}
-
 const REQUIREMENTS = [
   'Age 16 or older',
   'Commitment to 2-3 hours/week',
@@ -29,7 +27,7 @@ const WHATWILLIDO = [
   'Share gardening knowledge'
 ]
 
-const CharityDetail = (props: Props) => {
+const CharityDetail = () => {
   return (
     <>
       <div className="relative">

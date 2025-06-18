@@ -1,8 +1,6 @@
 import { Charity, OrganizeFollow, UpcomingEvent } from '@/components'
 
-type Props = {}
-
-const Home = (props: Props) => {
+const Home = () => {
   return (
     <div className="max-w-[1440px] w-full m-auto py-8 px-6">
       <div className="grid grid-cols-4 gap-6">

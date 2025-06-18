@@ -16,9 +16,7 @@ import { ChevronDownIcon, Progress } from '@radix-ui/themes'
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
 
-type Props = {}
-
-const CharityDetail = (props: Props) => {
+const CharityDetail = () => {
   const [openFrom, setOpenFrom] = useState(false)
   const [dateFrom, setDateFrom] = useState<Date | undefined>(undefined)
   const [openTo, setOpenTo] = useState(false)

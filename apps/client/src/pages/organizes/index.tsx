@@ -19,7 +19,7 @@ const Menu = [
   }
 ]
 
-const Organizes = (props: Props) => {
+const Organizes = (_props: Props) => {
   const { setParam, setParams, getParam, hasParam } = useUrlParams<SearchParams>({
     trackParams: ['q'],
     replace: false

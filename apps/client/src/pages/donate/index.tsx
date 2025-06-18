@@ -15,7 +15,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Badge, Progress } from '@radix-ui/themes'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-type Props = {}
 const FormSchema = z.object({
   name: z.string().trim().email().max(255, 'Name must be at most 255 characters long'),
   price: z.number().min(0),
@@ -25,7 +24,7 @@ const FormSchema = z.object({
 
 const PRICES = [100000, 200000, 500000, 1000000]
 
-const CharityDetail = (props: Props) => {
+const CharityDetail = () => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema)
   })
