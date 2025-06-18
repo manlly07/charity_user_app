@@ -1,4 +1,4 @@
-import { App, Auth, Back, Blank } from '../layout'
+import { App, Auth, Back, Blank, Profile } from '../layout'
 
 type LayoutType = 'auth' | 'app'
 
@@ -13,7 +13,8 @@ const View = (props: Props) => {
     auth: Auth,
     app: App,
     blank: Blank,
-    back: Back
+    back: Back,
+    profile: Profile
   }
   let Layout = layouts[props.layout] || layouts.auth
   document.title = props.title

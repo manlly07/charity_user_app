@@ -7,10 +7,10 @@ type Props = {
 
 const App = (props: Props) => {
   return (
-    <div className="max-w-screen min-h-screen">
+    <div className="max-w-screen min-h-screen relative">
       <Headers />
       <SubHeader />
-      {props.children}
+      <div className="relative">{props.children}</div>
     </div>
   )
 }
