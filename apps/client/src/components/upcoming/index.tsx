@@ -2,7 +2,7 @@ import { CalendarIcon } from '@radix-ui/react-icons'
 
 const UpcomingEvents = () => {
   return (
-    <div className="p-6 space-y-4 shadow">
+    <div className="p-6 space-y-4 shadow rounded-lg">
       <p className="text-lg font-semibold">Upcoming Events</p>
       <div className="flex gap-3 items-center bg-secondary-bg-color p-3 rounded-md">
         <CalendarIcon width="16" height="16" className="text-secondary-custom-color" />

@@ -24,7 +24,7 @@ const Organization = [
 
 const OrganizeFollow = () => {
   return (
-    <div className="p-6 space-y-4 shadow">
+    <div className="p-6 space-y-4 shadow rounded-lg">
       <p className="text-lg font-semibold">Organizations You Follow</p>
       {Organization.map((org) => (
         <Link

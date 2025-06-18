@@ -7,11 +7,8 @@ import { Button } from '../ui/button'
 
 const Charity = () => {
   return (
-    <div className="shadow rounded-lg">
-      <Link
-        to={'/organize/charity/1'}
-        className="image h-[192px] w-full rounded-t-lg overflow-hidden"
-      >
+    <div className="shadow rounded-lg overflow-hidden">
+      <Link to={'/organize/charity/1'} className="image h-[192px] w-full rounded-t-lg ">
         <img src={Banner1} alt="Banner" className="w-full h-full object-cover " />
       </Link>
       <div className="p-6 space-y-4">

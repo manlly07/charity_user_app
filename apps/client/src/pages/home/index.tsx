@@ -3,8 +3,8 @@ import { Charity, OrganizeFollow, UpcomingEvent } from '@/components'
 const Home = () => {
   return (
     <div className="max-w-[1440px] w-full m-auto py-8 px-6">
-      <div className="grid grid-cols-4 gap-6">
-        <div className="col-span-1">
+      <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-6">
+        <div className="hidden lg:block col-span-1">
           <div className="sticky top-0">
             <OrganizeFollow />
           </div>
@@ -14,7 +14,7 @@ const Home = () => {
             <Charity key={index} />
           ))}
         </div>
-        <div className="col-span-1">
+        <div className="hidden lg:block col-span-1">
           <div className="sticky top-0">
             <UpcomingEvent />
           </div>

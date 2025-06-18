@@ -29,7 +29,7 @@ const CharityDetail = () => {
     resolver: zodResolver(FormSchema)
   })
   return (
-    <div className="max-w-[750px] w-full m-auto p-8 space-y-9 shadow-lg rounded mb-12">
+    <div className="max-w-[750px] w-full m-auto p-8 space-y-9 shadow-lg rounded-xl mb-12">
       <div className="space-y-2">
         <Badge color="grass" radius="full">
           Đang kêu gọi
@@ -119,6 +119,19 @@ const CharityDetail = () => {
               ))}
             </div>
           </div>
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Nội dung chuyển khoản</FormLabel>
+                <FormControl>
+                  <InputCustom type="text" placeholder="Nội dung chuyển khoản" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <div className="p-6 bg-[#F8F9FA] border border-border rounded-lg space-y-6 text-center">
             <p className="text-base font-medium">Quét mã QR để quyên góp</p>
             <div className="image w-60 h-60 m-auto">
