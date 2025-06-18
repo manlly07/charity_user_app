@@ -24,9 +24,9 @@ import { ChevronDownIcon } from '@radix-ui/themes'
 import { useState } from 'react'
 
 const CharityHistory = () => {
-  const [date, setDate] = useState<Date | undefined>(new Date(2025, 5, 12))
+  const [date, _setDate] = useState<Date | undefined>(new Date(2025, 5, 12))
   const [openFrom, setOpenFrom] = useState(false)
-  const [dateFrom, setDateFrom] = useState<Date | undefined>(undefined)
+  const [dateFrom, _setDateFrom] = useState<Date | undefined>(undefined)
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
