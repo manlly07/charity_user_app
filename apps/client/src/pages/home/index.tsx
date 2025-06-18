@@ -14,7 +14,7 @@ const Home = () => {
             <Charity key={index} />
           ))}
         </div>
-        <div className="hidden lg:block col-span-1">
+        <div className="hidden md:block col-span-1">
           <div className="sticky top-0">
             <UpcomingEvent />
           </div>
