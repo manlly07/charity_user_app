@@ -1,6 +1,7 @@
 export { default as Charity } from './charity'
 export { default as DonateItem } from './donate'
 export { default as FollowIcon } from './follow'
+export * from './forms'
 export { default as Headers } from './headers'
 export { default as InputCustom } from './Input'
 export { default as OrganizeFollow } from './organize'

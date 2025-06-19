@@ -132,6 +132,10 @@
   background: linear-gradient(360deg, rgba(0, 0, 0, 0.60) 0%, rgba(0, 0, 0, 0.00) 100%);
 }
 
+.morphing-green {
+  background: linear-gradient(164.47589deg, #4CAF50 15%, #E8F5E9 85%), rgba(0, 0, 0, 0.00);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50 box-border;

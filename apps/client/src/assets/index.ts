@@ -2,6 +2,7 @@ import IconApple from './apple.png'
 import Banner1 from './banner_1.png'
 import Banner2 from './banner_2.png'
 import Banner3 from './banner_3.png'
+import Banner4 from './banner_4.png'
 import BgLogin from './bg-login.png'
 import CheckIcon from './check.svg'
 import Event1 from './event_1.png'
@@ -22,6 +23,7 @@ export {
   Banner1,
   Banner2,
   Banner3,
+  Banner4,
   BgLogin,
   CheckIcon,
   Event1,
