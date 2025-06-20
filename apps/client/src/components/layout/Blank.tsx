@@ -3,7 +3,7 @@ type Props = {
 }
 
 const Blank = (props: Props) => {
-  return <div className="w-screen h-screen">{props.children}</div>
+  return <div className="max-w-screen min-h-screen">{props.children}</div>
 }
 
 export default Blank

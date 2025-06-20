@@ -35,6 +35,7 @@ const AccountSchema = FormSchema.pick({
     .refine((file) => file.size <= 5 * 1024 * 1024, {
       message: 'Ảnh phải nhỏ hơn 5MB'
     })
+    .nullable()
 })
 
 // Schema cho đổi mật khẩu
