@@ -30,7 +30,7 @@ const DESCRIPTIONS = [
 ]
 
 const RequestOrganization = () => {
-  const [status, setStatus] = useState<RequestStatus>(RequestStatus.Approved)
+  const [status] = useState<RequestStatus>(RequestStatus.Approved)
 
   return (
     <div className="max-w-[1440px] w-full m-auto px-12 py-20 space-y-8">
