@@ -1,4 +1,4 @@
-import { Charity, OrganizeFollow, UpcomingEvent } from '@/components'
+import { Charity, Notifications, OrganizeFollow } from '@/components'
 
 const Home = () => {
   return (
@@ -16,7 +16,7 @@ const Home = () => {
         </div>
         <div className="hidden md:block col-span-1">
           <div className="sticky top-20">
-            <UpcomingEvent />
+            <Notifications />
           </div>
         </div>
       </div>

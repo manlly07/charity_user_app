@@ -7,7 +7,6 @@ import {
   Pencil1Icon,
   StarIcon
 } from '@radix-ui/react-icons'
-import { Badge } from '@radix-ui/themes'
 
 const Account = () => {
   return (
@@ -35,15 +34,6 @@ const Account = () => {
           <p className="text-sm text-text-secondary">Email Address</p>
           <p className="text-base font-medium">john.anderson@email.com</p>
         </div>
-        <div className="space-y-2">
-          <p className="text-sm text-text-secondary">Volunteer Points</p>
-          <p className="text-base font-medium text-primary-custom-color flex items-center gap-2">
-            2,450{' '}
-            <Badge color="grass" radius="full" size={'3'}>
-              Active
-            </Badge>
-          </p>
-        </div>
       </div>
       <div className="grid grid-cols-3 gap-6">
         <div className="p-6 shadow rounded-lg flex items-center justify-between">
@@ -57,8 +47,8 @@ const Account = () => {
         </div>
         <div className="p-6 shadow rounded-lg flex items-center justify-between">
           <div className="space-y-1">
-            <p className="text-sm text-text-secondary">Volunteer Hours</p>
-            <p className="text-2xl font-semibold">48 hours</p>
+            <p className="text-sm text-text-secondary">Total Event</p>
+            <p className="text-2xl font-semibold">48 events</p>
           </div>
           <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-custom-color/10 text-primary-custom-color">
             <ClockIcon width={16} height={16} />

@@ -24,12 +24,12 @@ const RequestOrganization = () => {
         <Button
           className="bg-primary-custom-color text-white hover:bg-primary-custom-color w-full"
           size={'lg'}
-          onClick={() => navigate('/request-organize/status')}
+          onClick={() => navigate('/')}
         >
           <HomeIcon /> Return to Dashboard
         </Button>
         <Link
-          to={'/'}
+          to={'/request-organize/status'}
           className="flex items-center justify-center gap-2 font-medium text-primary-custom-color"
         >
           View Application Status <ChevronRightIcon />

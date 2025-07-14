@@ -1,5 +1,6 @@
 import { Event4, Event5, Event6, Event7 } from '@/assets'
 import SearchInput from '@/components/search'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import {
@@ -20,8 +21,40 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select'
+import { cn } from '@/lib/utils'
 import { ChevronDownIcon } from '@radix-ui/themes'
 import { useState } from 'react'
+
+const EVENTS = [
+  {
+    image: Event4,
+    title: 'Community Food Drive Platform',
+    location: 'Local Food Bank',
+    date: 'Participated on October 15, 2023',
+    registered: 'Registered'
+  },
+  {
+    image: Event5,
+    title: 'CNeighborhood Cleanup Initiative',
+    location: 'Environmental Group',
+    date: 'Participated on September 25, 2023',
+    registered: 'Participated'
+  },
+  {
+    image: Event6,
+    title: 'Book Donation Event',
+    location: 'City Library',
+    date: 'Participated on November 10, 2023',
+    registered: 'Participated'
+  },
+  {
+    image: Event7,
+    title: 'Park Beautification Project',
+    location: 'Community Park Association',
+    date: 'Participated on August 5, 2023',
+    registered: 'Missed'
+  }
+]
 
 const CharityHistory = () => {
   const [date, _setDate] = useState<Date | undefined>(new Date(2025, 5, 12))
@@ -69,70 +102,37 @@ const CharityHistory = () => {
         </Button>
       </div>
       <div className="space-y-4">
-        <div className="rounded-lg overflow-hidden shadow flex">
-          <img src={Event4} width={200} height={160} className="object-cover" />
-          <div className="p-6 space-y-3 flex-1">
-            <p className="text-lg font-medium">Community Food Drive</p>
-            <p className="text-base text-text-secondary">Local Food Bank</p>
-            <div className="flex items-center justify-between w-full">
-              <p className="text-sm text-text-custom-color">Participated on October 15, 2023</p>
-              <Button
-                className="border-border-input-color text-primary-custom-color hover:text-primary-custom-color"
-                variant={'outline'}
-              >
-                See more
-              </Button>
+        {EVENTS.map((event, _) => (
+          <div key={_} className="rounded-lg overflow-hidden shadow flex">
+            <img src={event.image} width={200} height={160} className="object-cover" />
+            <div className="p-6 space-y-3 flex-1">
+              <div className="flex items-center gap-2">
+                <p className="text-lg font-medium">{event.title}</p>
+                <Badge
+                  variant={'secondary'}
+                  className={cn('text-xs', {
+                    'bg-primary-custom-color/10 text-primary-custom-color':
+                      event.registered === 'Registered',
+                    'bg-blue-500/10 text-blue-500': event.registered === 'Participated',
+                    'bg-red-500/10 text-red-500': event.registered === 'Missed'
+                  })}
+                >
+                  {event.registered}
+                </Badge>
+              </div>
+              <p className="text-base text-text-secondary">Local Food Bank</p>
+              <div className="flex items-center justify-between w-full">
+                <p className="text-sm text-text-custom-color">Participated on October 15, 2023</p>
+                <Button
+                  className="border-border-input-color text-primary-custom-color hover:text-primary-custom-color"
+                  variant={'outline'}
+                >
+                  See more
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="rounded-lg overflow-hidden shadow flex">
-          <img src={Event5} width={200} height={160} className="object-cover" />
-          <div className="p-6 space-y-3 flex-1">
-            <p className="text-lg font-medium">Community Food Drive</p>
-            <p className="text-base text-text-secondary">Local Food Bank</p>
-            <div className="flex items-center justify-between w-full">
-              <p className="text-sm text-text-custom-color">Participated on October 15, 2023</p>
-              <Button
-                className="border-border-input-color text-primary-custom-color hover:text-primary-custom-color"
-                variant={'outline'}
-              >
-                See more
-              </Button>
-            </div>
-          </div>
-        </div>
-        <div className="rounded-lg overflow-hidden shadow flex">
-          <img src={Event6} width={200} height={160} className="object-cover" />
-          <div className="p-6 space-y-3 flex-1">
-            <p className="text-lg font-medium">Community Food Drive</p>
-            <p className="text-base text-text-secondary">Local Food Bank</p>
-            <div className="flex items-center justify-between w-full">
-              <p className="text-sm text-text-custom-color">Participated on October 15, 2023</p>
-              <Button
-                className="border-border-input-color text-primary-custom-color hover:text-primary-custom-color"
-                variant={'outline'}
-              >
-                See more
-              </Button>
-            </div>
-          </div>
-        </div>
-        <div className="rounded-lg overflow-hidden shadow flex">
-          <img src={Event7} width={200} height={160} className="object-cover" />
-          <div className="p-6 space-y-3 flex-1">
-            <p className="text-lg font-medium">Community Food Drive</p>
-            <p className="text-base text-text-secondary">Local Food Bank</p>
-            <div className="flex items-center justify-between w-full">
-              <p className="text-sm text-text-custom-color">Participated on October 15, 2023</p>
-              <Button
-                className="border-border-input-color text-primary-custom-color hover:text-primary-custom-color"
-                variant={'outline'}
-              >
-                See more
-              </Button>
-            </div>
-          </div>
-        </div>
+        ))}
       </div>
       <div className="m-auto mt-8">
         <Pagination>

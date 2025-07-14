@@ -1,7 +1,37 @@
 import { Event1 } from '@/assets'
+import { Badge } from '@/components/ui/badge'
+import { cn } from '@/lib/utils'
 import { DownloadIcon, FileTextIcon } from '@radix-ui/react-icons'
+import { ClockIcon } from 'lucide-react'
+import { useState } from 'react'
+
+enum RequestStatus {
+  Pending = 'pending',
+  Approved = 'approved',
+  Rejected = 'rejected'
+}
+
+const DESCRIPTIONS = [
+  {
+    title: 'Under Review',
+    description: 'Your application is currently under review by our team.',
+    status: RequestStatus.Pending
+  },
+  {
+    title: 'Application Approved',
+    description: 'Congratulations! Your application has been approved.',
+    status: RequestStatus.Approved
+  },
+  {
+    title: 'Application Rejected',
+    description: 'We’re sorry to inform you that your application was rejected.',
+    status: RequestStatus.Rejected
+  }
+]
 
 const RequestOrganization = () => {
+  const [status, setStatus] = useState<RequestStatus>(RequestStatus.Approved)
+
   return (
     <div className="max-w-[1440px] w-full m-auto px-12 py-20 space-y-8">
       <p className="text-3xl font-bold">Application Status</p>
@@ -60,8 +90,53 @@ const RequestOrganization = () => {
           </div>
         </div>
         <div className="space-y-6">
-          <div className="border border-border rounded-lg p-8 space-y-8 h-fit">
+          <div className="border border-border rounded-lg p-8 space-y-6 h-fit">
             <p className="text-2xl font-bold">Current Status</p>
+            <Badge
+              variant="secondary"
+              className={cn('text-base px-6', {
+                'bg-green-500/10 text-green-500': status === RequestStatus.Approved,
+                'bg-yellow-500/10 text-yellow-500': status === RequestStatus.Pending,
+                'bg-red-500/10 text-red-500': status === RequestStatus.Rejected
+              })}
+            >
+              <ClockIcon className="mr-2" />
+              {status.charAt(0).toUpperCase() + status.slice(1)}
+            </Badge>
+            <div className="text-text-custom-color text-sm">
+              Last updated: December 18, 2023, 2:30 PM
+            </div>
+            <div className="space-y-4">
+              {DESCRIPTIONS.filter((item, index) => index === 0 || item.status === status).map(
+                (item, index) => (
+                  <div className="flex gap-2 items-center" key={index}>
+                    <div className="self-stretch flex">
+                      <span
+                        className={cn('block w-2.5 h-2.5 rounded-full', {
+                          'bg-green-500/50': status === RequestStatus.Approved,
+                          'bg-red-500/50': status === RequestStatus.Rejected,
+                          'bg-yellow-500/50': status === RequestStatus.Pending
+                        })}
+                      ></span>
+                      <span
+                        className={cn(
+                          'block w-1 rounded-full h-[calc(100%-10px)] mt-auto -translate-x-[7px]',
+                          {
+                            'bg-green-500/50': status === RequestStatus.Approved,
+                            'bg-red-500/50': status === RequestStatus.Rejected,
+                            'bg-yellow-500/50': status === RequestStatus.Pending
+                          }
+                        )}
+                      ></span>
+                    </div>
+                    <div>
+                      <div className="font-semibold">{item.title}</div>
+                      <div className="text-text-custom-color text-base">{item.description}</div>
+                    </div>
+                  </div>
+                )
+              )}
+            </div>
           </div>
           <div className="border border-border rounded-lg p-8 space-y-1 h-fit bg-[#F9FAFB]">
             <p className="text-base font-bold">Need Help?</p>
