@@ -21,7 +21,7 @@ const SIDEBAR = [
   {
     name: 'Settings',
     icon: <GearIcon width={20} height={20} />,
-    path: '/settings'
+    path: '/organization/settings'
   },
   {
     name: 'Log out',
@@ -32,6 +32,7 @@ const SIDEBAR = [
 
 const SidebarOrganize = () => {
   const { pathname } = useLocation()
+  console.log(pathname)
   return (
     <div className="p-6 border-r border-[#E5E7EB] col-span-1 min-h-[calc(100vh-64px)] relative">
       <div className="fixed w-[calc(280px-2*24px)] h-[calc(100vh-64px-2*24px)]">
@@ -44,7 +45,7 @@ const SidebarOrganize = () => {
                 className={cn(
                   'flex gap-2 items-center rounded-lg duration-300 px-4 py-3 hover:bg-[#DDF3DD] hover:text-primary-custom-color mt-auto',
                   {
-                    'bg-[#DDF3DD] text-primary-custom-color': pathname === item.path
+                    'bg-[#DDF3DD] text-primary-custom-color': pathname.startsWith(item.path)
                   }
                 )}
               >

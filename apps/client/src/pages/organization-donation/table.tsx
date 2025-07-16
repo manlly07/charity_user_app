@@ -9,6 +9,7 @@ import {
   PaginationNext,
   PaginationPrevious
 } from '@/components/ui/pagination'
+import { Progress } from '@/components/ui/progress'
 import {
   Table,
   TableBody,
@@ -28,209 +29,208 @@ import {
 } from '@tanstack/react-table'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router'
-type TCharityStatus = 'active' | 'inactive' | 'upcoming' | 'completed'
+type TDonationStatus = 'active' | 'inactive' | 'upcoming' | 'completed'
 
-type TCharity = {
+type TDonation = {
   id: number
   name: string
   image: string // URL đến ảnh đại diện
-  location: string
   startDate: string // ISO date string, ví dụ: "2025-07-15"
-  endDate: string // ISO date string
-  status: TCharityStatus
+  donatedAmount: number
+  targetAmount: number
+  status: TDonationStatus
 }
 
-const charityList: TCharity[] = [
+const donations: TDonation[] = [
   {
     id: 1,
-    name: 'Hope for All',
-    image: 'https://via.placeholder.com/150?text=Hope+for+All',
-    location: 'Hanoi, Vietnam',
+    name: 'Build School Library',
+    image: 'https://example.com/image1.jpg',
     startDate: '2025-07-01',
-    endDate: '2025-08-15',
+    donatedAmount: 35000000,
+    targetAmount: 50000000,
     status: 'active'
   },
   {
     id: 2,
-    name: 'Clean Water Project',
-    image: 'https://via.placeholder.com/150?text=Clean+Water',
-    location: 'Da Nang, Vietnam',
-    startDate: '2025-05-10',
-    endDate: '2025-06-10',
-    status: 'completed'
-  },
-  {
-    id: 3,
-    name: 'Books for Children',
-    image: 'https://via.placeholder.com/150?text=Books+for+Children',
-    location: 'Ho Chi Minh City, Vietnam',
-    startDate: '2025-09-01',
-    endDate: '2025-09-30',
-    status: 'upcoming'
-  },
-  {
-    id: 4,
-    name: 'Health Check for Elderly',
-    image: 'https://via.placeholder.com/150?text=Health+Check',
-    location: 'Can Tho, Vietnam',
-    startDate: '2025-06-01',
-    endDate: '2025-06-15',
-    status: 'inactive'
-  },
-  {
-    id: 5,
-    name: 'Feeding the Homeless',
-    image: 'https://via.placeholder.com/150?text=Feeding+Homeless',
-    location: 'Hai Phong, Vietnam',
-    startDate: '2025-07-20',
-    endDate: '2025-08-05',
+    name: 'Clean Water for Villages',
+    image: 'https://example.com/image2.jpg',
+    startDate: '2025-06-20',
+    donatedAmount: 12000000,
+    targetAmount: 25000000,
     status: 'active'
   },
   {
-    id: 6,
-    name: 'Education for All',
-    image: 'https://via.placeholder.com/150?text=Education+for+All',
-    location: 'Hue, Vietnam',
-    startDate: '2025-10-01',
-    endDate: '2025-10-31',
+    id: 3,
+    name: 'Medical Aid for Children',
+    image: 'https://example.com/image3.jpg',
+    startDate: '2025-05-10',
+    donatedAmount: 50000000,
+    targetAmount: 50000000,
+    status: 'completed'
+  },
+  {
+    id: 4,
+    name: 'Winter Clothes Drive',
+    image: 'https://example.com/image4.jpg',
+    startDate: '2025-09-01',
+    donatedAmount: 0,
+    targetAmount: 20000000,
     status: 'upcoming'
   },
   {
+    id: 5,
+    name: 'Scholarship Fund for Students',
+    image: 'https://example.com/image5.jpg',
+    startDate: '2025-04-15',
+    donatedAmount: 15000000,
+    targetAmount: 30000000,
+    status: 'inactive'
+  },
+  {
+    id: 6,
+    name: 'Food Distribution Program',
+    image: 'https://example.com/image6.jpg',
+    startDate: '2025-06-10',
+    donatedAmount: 10000000,
+    targetAmount: 20000000,
+    status: 'active'
+  },
+  {
     id: 7,
-    name: 'Warm Clothes for Winter',
-    image: 'https://via.placeholder.com/150?text=Warm+Clothes',
-    location: 'Lao Cai, Vietnam',
-    startDate: '2024-12-01',
-    endDate: '2025-01-15',
+    name: 'Orphanage Renovation',
+    image: 'https://example.com/image7.jpg',
+    startDate: '2025-03-22',
+    donatedAmount: 20000000,
+    targetAmount: 50000000,
     status: 'completed'
   },
   {
     id: 8,
-    name: 'Orphanage Support',
-    image: 'https://via.placeholder.com/150?text=Orphanage+Support',
-    location: 'Quang Ninh, Vietnam',
-    startDate: '2025-06-15',
-    endDate: '2025-07-15',
-    status: 'inactive'
+    name: 'Books for Remote Schools',
+    image: 'https://example.com/image8.jpg',
+    startDate: '2025-08-01',
+    donatedAmount: 0,
+    targetAmount: 10000000,
+    status: 'upcoming'
   },
   {
     id: 9,
-    name: 'Medical Mission',
-    image: 'https://via.placeholder.com/150?text=Medical+Mission',
-    location: 'Thanh Hoa, Vietnam',
-    startDate: '2025-08-01',
-    endDate: '2025-08-20',
+    name: 'Bicycle Donation Campaign',
+    image: 'https://example.com/image9.jpg',
+    startDate: '2025-06-01',
+    donatedAmount: 5000000,
+    targetAmount: 15000000,
     status: 'active'
   },
   {
     id: 10,
     name: 'Flood Relief Fund',
-    image: 'https://via.placeholder.com/150?text=Flood+Relief',
-    location: 'Nghe An, Vietnam',
-    startDate: '2025-03-01',
-    endDate: '2025-04-01',
+    image: 'https://example.com/image10.jpg',
+    startDate: '2025-05-05',
+    donatedAmount: 18000000,
+    targetAmount: 20000000,
     status: 'completed'
   },
   {
     id: 11,
-    name: 'Green City Campaign',
-    image: 'https://via.placeholder.com/150?text=Green+City',
-    location: 'Da Lat, Vietnam',
-    startDate: '2025-07-01',
-    endDate: '2025-07-30',
+    name: 'Charity Health Camp',
+    image: 'https://example.com/image11.jpg',
+    startDate: '2025-07-10',
+    donatedAmount: 8000000,
+    targetAmount: 15000000,
     status: 'active'
   },
   {
     id: 12,
-    name: 'Blood Donation Drive',
-    image: 'https://via.placeholder.com/150?text=Blood+Donation',
-    location: 'Vinh, Vietnam',
-    startDate: '2025-08-05',
-    endDate: '2025-08-07',
+    name: 'Women Empowerment Workshop',
+    image: 'https://example.com/image12.jpg',
+    startDate: '2025-09-10',
+    donatedAmount: 0,
+    targetAmount: 10000000,
     status: 'upcoming'
   },
   {
     id: 13,
-    name: 'Child Nutrition Support',
-    image: 'https://via.placeholder.com/150?text=Child+Nutrition',
-    location: 'Bac Ninh, Vietnam',
-    startDate: '2025-06-01',
-    endDate: '2025-06-30',
-    status: 'inactive'
-  },
-  {
-    id: 14,
-    name: 'Eye Care for Kids',
-    image: 'https://via.placeholder.com/150?text=Eye+Care',
-    location: 'Nam Dinh, Vietnam',
-    startDate: '2025-09-10',
-    endDate: '2025-09-20',
-    status: 'upcoming'
-  },
-  {
-    id: 15,
-    name: 'Disaster Recovery',
-    image: 'https://via.placeholder.com/150?text=Disaster+Recovery',
-    location: 'Nha Trang, Vietnam',
-    startDate: '2025-04-01',
-    endDate: '2025-04-30',
-    status: 'completed'
-  },
-  {
-    id: 16,
-    name: 'Tech for Charity',
-    image: 'https://via.placeholder.com/150?text=Tech+for+Charity',
-    location: 'Binh Duong, Vietnam',
-    startDate: '2025-07-10',
-    endDate: '2025-08-10',
+    name: 'Plant Trees for Future',
+    image: 'https://example.com/image13.jpg',
+    startDate: '2025-07-05',
+    donatedAmount: 2200000,
+    targetAmount: 5000000,
     status: 'active'
   },
   {
-    id: 17,
-    name: 'Mental Health Awareness',
-    image: 'https://via.placeholder.com/150?text=Mental+Health',
-    location: 'Long An, Vietnam',
-    startDate: '2025-08-25',
-    endDate: '2025-09-05',
-    status: 'upcoming'
-  },
-  {
-    id: 18,
-    name: 'Village Electricity',
-    image: 'https://via.placeholder.com/150?text=Village+Electricity',
-    location: 'Kon Tum, Vietnam',
-    startDate: '2025-05-15',
-    endDate: '2025-06-15',
+    id: 14,
+    name: 'Village Electrification',
+    image: 'https://example.com/image14.jpg',
+    startDate: '2025-01-15',
+    donatedAmount: 40000000,
+    targetAmount: 40000000,
     status: 'completed'
   },
   {
+    id: 15,
+    name: 'Animal Shelter Support',
+    image: 'https://example.com/image15.jpg',
+    startDate: '2025-06-30',
+    donatedAmount: 7000000,
+    targetAmount: 15000000,
+    status: 'active'
+  },
+  {
+    id: 16,
+    name: 'Build Rural Toilets',
+    image: 'https://example.com/image16.jpg',
+    startDate: '2025-08-20',
+    donatedAmount: 0,
+    targetAmount: 12000000,
+    status: 'upcoming'
+  },
+  {
+    id: 17,
+    name: 'Emergency Medical Fund',
+    image: 'https://example.com/image17.jpg',
+    startDate: '2025-03-05',
+    donatedAmount: 25000000,
+    targetAmount: 30000000,
+    status: 'completed'
+  },
+  {
+    id: 18,
+    name: 'Youth Education Program',
+    image: 'https://example.com/image18.jpg',
+    startDate: '2025-05-18',
+    donatedAmount: 10000000,
+    targetAmount: 25000000,
+    status: 'inactive'
+  },
+  {
     id: 19,
-    name: 'School Renovation',
-    image: 'https://via.placeholder.com/150?text=School+Renovation',
-    location: 'Quang Tri, Vietnam',
-    startDate: '2025-07-20',
-    endDate: '2025-08-20',
+    name: 'Hospital Equipment Support',
+    image: 'https://example.com/image19.jpg',
+    startDate: '2025-06-05',
+    donatedAmount: 19000000,
+    targetAmount: 30000000,
     status: 'active'
   },
   {
     id: 20,
-    name: 'Elderly Support Network',
-    image: 'https://via.placeholder.com/150?text=Elderly+Support',
-    location: 'Soc Trang, Vietnam',
-    startDate: '2025-09-01',
-    endDate: '2025-09-30',
+    name: "Children's Day Gifts",
+    image: 'https://example.com/image20.jpg',
+    startDate: '2025-09-25',
+    donatedAmount: 0,
+    targetAmount: 5000000,
     status: 'upcoming'
   }
 ]
 
-const TableCharities = () => {
+const TableDonations = () => {
   const navigate = useNavigate()
-  const columns: ColumnDef<TCharity>[] = [
+  const columns: ColumnDef<TDonation>[] = [
     {
       id: 'event',
       header: 'Event',
       cell: ({ row }) => {
-        console.log(row)
         return (
           <div className="flex items-center gap-2">
             <img
@@ -244,9 +244,39 @@ const TableCharities = () => {
       }
     },
     {
-      accessorKey: 'location',
-      header: 'Location',
-      cell: ({ row }) => row.getValue('location')
+      accessorKey: 'startDate',
+      header: 'Date',
+      cell: ({ row }) => new Date(row.getValue('startDate')).toLocaleDateString()
+    },
+    {
+      id: 'donatedAmount',
+      header: 'Range',
+      cell: ({ row }) => {
+        const donated = Number(row.original.donatedAmount) || 0
+        const target = Number(row.original.targetAmount) || 0
+        return (
+          <div>
+            <span className="flex justify-between">
+              <span className="text-sm font-medium text-primary-custom-color">
+                {new Intl.NumberFormat('en-US', {
+                  style: 'currency',
+                  currency: 'USD'
+                }).format(donated)}
+              </span>
+              <span className="text-sm font-medium">
+                {new Intl.NumberFormat('en-US', {
+                  style: 'currency',
+                  currency: 'USD'
+                }).format(target)}
+              </span>
+            </span>
+            <Progress
+              value={(donated / target) * 100}
+              className="w-full h-2 rounded-full mt-1 bg-gray-100"
+            />
+          </div>
+        )
+      }
     },
     {
       accessorKey: 'status',
@@ -267,16 +297,6 @@ const TableCharities = () => {
       )
     },
     {
-      accessorKey: 'startDate',
-      header: 'Start Date',
-      cell: ({ row }) => new Date(row.getValue('startDate')).toLocaleDateString()
-    },
-    {
-      accessorKey: 'volunteers',
-      header: 'Volunteers',
-      cell: ({ row }) => row.getValue('volunteers')
-    },
-    {
       id: 'actions',
       header: 'Actions',
       cell: ({ row }) => (
@@ -284,7 +304,7 @@ const TableCharities = () => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => navigate(`/organization/charities/${row.id}`)}
+            onClick={() => navigate(`/organization/donations/${row.id}`)}
           >
             <EyeOpenIcon />
           </Button>
@@ -297,7 +317,7 @@ const TableCharities = () => {
   ]
 
   const table = useReactTable({
-    data: charityList,
+    data: donations,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel()
@@ -393,4 +413,4 @@ const TableCharities = () => {
   )
 }
 
-export default TableCharities
+export default TableDonations
