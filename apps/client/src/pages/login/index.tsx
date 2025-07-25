@@ -9,9 +9,14 @@ import {
   FormLabel,
   FormMessage
 } from '@/components/ui/form'
+import { login } from '@/stores/slices/auth.slice'
+import { AppDispatch } from '@/stores/store'
+import { LoginData } from '@/types/auth.type'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router'
+import { useDispatch } from 'react-redux'
+import { Link, useNavigate } from 'react-router'
+import { toast } from 'react-toastify'
 import { z } from 'zod'
 const FormSchema = z.object({
   email: z.string().trim().email().max(255, 'Email must be at most 255 characters long'),
@@ -23,7 +28,7 @@ const FormSchema = z.object({
 })
 
 const Login = () => {
-  const form = useForm<z.infer<typeof FormSchema>>({
+  const form = useForm<LoginData>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       email: '',
@@ -31,8 +36,22 @@ const Login = () => {
     }
   })
 
+  const dispatch = useDispatch<AppDispatch>()
+  const navigate = useNavigate()
+
+  const onSubmit = async (data: LoginData) => {
+    const res = await dispatch(login(data))
+    if (res.meta.requestStatus === 'fulfilled') {
+      return navigate('/')
+    }
+
+    if (res.meta.requestStatus === 'rejected') {
+      if (res.payload.status === 401) toast.error('Login failed')
+    }
+  }
+
   return (
-    <div className="w-full h-full relative flex">
+    <div className="w-full h-screen relative flex">
       <div className="hidden md:block flex-1 w-full h-full">
         <img className="w-full h-full" src={BgLogin} alt="bglogin" />
       </div>
@@ -43,7 +62,7 @@ const Login = () => {
             <p className="text-base text-[#4B5563]">Login to continue your journey of giving</p>
           </div>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit((data) => console.log(data))} className="space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField
                 control={form.control}
                 name="email"
@@ -51,7 +70,12 @@ const Login = () => {
                   <FormItem>
                     <FormLabel>Email address</FormLabel>
                     <FormControl>
-                      <InputCustom type="email" placeholder="Enter your email" {...field} />
+                      <InputCustom
+                        type="email"
+                        placeholder="Enter your email"
+                        {...field}
+                        autoComplete="username"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -64,7 +88,12 @@ const Login = () => {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <InputCustom type="password" placeholder="Enter your password" {...field} />
+                      <InputCustom
+                        type="password"
+                        placeholder="Enter your password"
+                        {...field}
+                        autoComplete="current-password"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

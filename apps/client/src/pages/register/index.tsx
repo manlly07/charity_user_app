@@ -9,39 +9,33 @@ import {
   FormLabel,
   FormMessage
 } from '@/components/ui/form'
+import { register } from '@/stores/slices/auth.slice'
+import { AppDispatch } from '@/stores/store'
+import { RegisterData, RegisterSchema } from '@/types/auth.type'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router'
-import { z } from 'zod'
-
-const vietnamPhoneRegex = /^(0|\+84)(3|5|7|8|9)[0-9]{8}$/
-const FormSchema = z.object({
-  fullName: z
-    .string()
-    .trim()
-    .min(2, 'Full Name phải có ít nhất 2 ký tự')
-    .max(50, 'Full Name tối đa 50 ký tự'),
-
-  email: z.string().trim().email('Email không hợp lệ'),
-
-  phoneNumber: z
-    .string()
-    .trim()
-    .regex(vietnamPhoneRegex, 'Số điện thoại không đúng định dạng Việt Nam'),
-
-  password: z.string().trim().min(8, 'Mật khẩu phải có ít nhất 8 ký tự')
-})
+import { useDispatch } from 'react-redux'
+import { Link, useNavigate } from 'react-router'
 
 const Login = () => {
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm<RegisterData>({
+    resolver: zodResolver(RegisterSchema),
     defaultValues: {
       fullName: '',
       email: '',
-      phoneNumber: '',
       password: ''
     }
   })
+
+  const dispatch = useDispatch<AppDispatch>()
+  const navigate = useNavigate()
+
+  const onSubmit = async (data: RegisterData) => {
+    const res = await dispatch(register(data))
+    if (res.meta.requestStatus === 'fulfilled') {
+      return navigate('/')
+    }
+  }
 
   return (
     <div className="w-full h-full relative flex">
@@ -55,15 +49,20 @@ const Login = () => {
             <p className="text-base text-[#4B5563]">Join our community of changemakers</p>
           </div>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit((data) => console.log(data))} className="space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField
                 control={form.control}
-                name="email"
+                name="fullName"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Full Name</FormLabel>
                     <FormControl>
-                      <InputCustom type="text" placeholder="Enter your name" {...field} />
+                      <InputCustom
+                        type="text"
+                        placeholder="Enter your name"
+                        {...field}
+                        autoComplete="username"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -76,20 +75,12 @@ const Login = () => {
                   <FormItem>
                     <FormLabel>Email address</FormLabel>
                     <FormControl>
-                      <InputCustom type="email" placeholder="Enter your email" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Phone Number</FormLabel>
-                    <FormControl>
-                      <InputCustom type="text" placeholder="Enter your phone number" {...field} />
+                      <InputCustom
+                        type="email"
+                        placeholder="Enter your email"
+                        {...field}
+                        autoComplete="username"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -102,7 +93,12 @@ const Login = () => {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <InputCustom type="password" placeholder="Enter your password" {...field} />
+                      <InputCustom
+                        type="password"
+                        placeholder="Enter your password"
+                        {...field}
+                        autoComplete="current-password"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

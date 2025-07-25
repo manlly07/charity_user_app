@@ -1,0 +1,11 @@
+export enum ROLE {
+  ROLE_USER = 'ROLE_USER',
+  ROLE_ORGANIZATION = 'ROLE_ORGANIZATION',
+  ROLE_ADMIN = 'ROLE_ADMIN'
+}
+
+export enum RequestStatus {
+  PENDING = 'PENDING',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED'
+}

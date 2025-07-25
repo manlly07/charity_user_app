@@ -11,14 +11,19 @@ const FormSchema = z.object({
     .min(2, 'Full Name phải có ít nhất 2 ký tự')
     .max(50, 'Full Name tối đa 50 ký tự'),
 
-  email: z.string().trim().email('Email không hợp lệ'),
+  email: z.string().trim().email().max(255, 'Email must be at most 255 characters long'),
 
   phoneNumber: z
     .string()
     .trim()
-    .regex(vietnamPhoneRegex, 'Số điện thoại không đúng định dạng Việt Nam'),
+    .regex(vietnamPhoneRegex, 'Số điện thoại không đúng định dạng Việt Nam')
+    .optional(),
 
-  password: z.string().trim().min(8, 'Mật khẩu phải có ít nhất 8 ký tự')
+  password: z
+    .string()
+    .trim()
+    .min(6, 'Password must be at least 6 characters long')
+    .max(255, 'Password must be at most 255 characters long')
 })
 
 // Schema cho thông tin tài khoản (không bao gồm password)
@@ -57,6 +62,8 @@ const LoginSchema = FormSchema.pick({
   password: true
 })
 
+const RegisterSchema = FormSchema.omit({ phoneNumber: true })
+
 // Schema cho quên mật khẩu
 const ForgotPasswordSchema = FormSchema.pick({
   email: true
@@ -81,13 +88,26 @@ export type PasswordData = z.infer<typeof PasswordSchema>
 export type LoginData = z.infer<typeof LoginSchema>
 export type ForgotPasswordData = z.infer<typeof ForgotPasswordSchema>
 export type ResetPasswordData = z.infer<typeof ResetPasswordSchema>
+export type RegisterData = z.infer<typeof RegisterSchema>
+export type JwtTokens = {
+  accessToken: string
+  refreshToken: string
+  tokenType: 'Bearer'
+}
 
+export type User = JwtTokens & {
+  id: number
+  username: string
+  email: string
+  role: string
+}
 export {
   AccountSchema,
   ForgotPasswordSchema,
   FormSchema,
   LoginSchema,
   PasswordSchema,
+  RegisterSchema,
   ResetPasswordSchema,
   vietnamPhoneRegex
 }

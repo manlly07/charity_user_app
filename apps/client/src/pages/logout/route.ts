@@ -1,9 +1,9 @@
 import { lazy } from 'react'
 
 export default {
-  path: '/register',
+  path: '/logout',
   is_public: true,
   component: lazy(() => import('.')),
   layout: 'blank',
-  title: 'Volunteer Hub | Register'
+  title: 'Volunteer Hub | Logout'
 }

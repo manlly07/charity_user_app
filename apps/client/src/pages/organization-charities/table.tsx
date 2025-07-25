@@ -272,11 +272,6 @@ const TableCharities = () => {
       cell: ({ row }) => new Date(row.getValue('startDate')).toLocaleDateString()
     },
     {
-      accessorKey: 'volunteers',
-      header: 'Volunteers',
-      cell: ({ row }) => row.getValue('volunteers')
-    },
-    {
       id: 'actions',
       header: 'Actions',
       cell: ({ row }) => (

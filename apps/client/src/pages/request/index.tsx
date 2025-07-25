@@ -12,16 +12,19 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 import ImageUpload from '@/components/upload'
 import { useMultipleImageUpload } from '@/hooks'
-import { OrganizationSchema } from '@/types/organization.type'
+import useOrganization from '@/hooks/useOrganization'
+import { RequestService } from '@/services'
+import { RootState } from '@/stores/store'
+import { OrganizationFormData, OrganizationSchema } from '@/types/organization.type'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { UploadIcon } from '@radix-ui/react-icons'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
+import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
-import { z } from 'zod'
 
-type Form = z.infer<typeof OrganizationSchema>
 const RequestOrganization = () => {
-  const form = useForm<Form>({
+  const form = useForm<OrganizationFormData>({
     resolver: zodResolver(OrganizationSchema)
   })
 
@@ -31,10 +34,20 @@ const RequestOrganization = () => {
     required: ['organizationLogo', 'certificate'], // profileImage là bắt buộc
     form // Truyền form instance để tự động sync
   })
+  const { user } = useSelector((state: RootState) => state.auth)
+  const { organization } = useOrganization(user!.id)
   const navigate = useNavigate()
-  const onSubmit = (data: Form) => {
-    console.log(data)
-    navigate('/request-organize/success')
+
+  useEffect(() => {
+    if (organization) navigate('/request-organize/status')
+  }, [organization])
+
+  const onSubmit = async (data: OrganizationFormData) => {
+    const res = await RequestService.create(data, user!.id)
+    if (res) {
+      navigate('/request-organize/success')
+      return
+    }
   }
 
   return (
@@ -80,34 +93,6 @@ const RequestOrganization = () => {
                 </FormItem>
               )}
             />
-            <div className="flex gap-6 [&>*]:flex-1">
-              <FormField
-                control={form.control}
-                name="founderFullName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Founder's Full Name</FormLabel>
-                    <FormControl>
-                      <InputCustom type="text" placeholder="Enter full name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email Address</FormLabel>
-                    <FormControl>
-                      <InputCustom type="email" placeholder="Enter email address" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
             <FormField
               control={form.control}
               name="phoneNumber"

@@ -1,3 +1,4 @@
+import useAuth from '@/hooks/useAuth'
 import { App, Auth, Back, Blank, Organization, Profile } from '../layout'
 
 type LayoutType = 'auth' | 'app'
@@ -19,6 +20,8 @@ const View = (props: Props) => {
   }
   let Layout = layouts[props.layout] || layouts.auth
   document.title = props.title
+
+  useAuth(props?.is_public)
 
   if (!props.display) return null
 

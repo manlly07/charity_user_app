@@ -11,13 +11,13 @@ const OrganizationSchema = z.object({
     .min(2, 'Tên tổ chức phải có ít nhất 2 ký tự')
     .max(100, 'Tên tổ chức tối đa 100 ký tự'),
 
-  founderFullName: z
-    .string()
-    .trim()
-    .min(2, 'Tên người sáng lập phải có ít nhất 2 ký tự')
-    .max(50, 'Tên người sáng lập tối đa 50 ký tự'),
+  // founderFullName: z
+  //   .string()
+  //   .trim()
+  //   .min(2, 'Tên người sáng lập phải có ít nhất 2 ký tự')
+  //   .max(50, 'Tên người sáng lập tối đa 50 ký tự'),
 
-  email: z.string().trim().email('Email không hợp lệ'),
+  // email: z.string().trim().email('Email không hợp lệ'),
 
   phoneNumber: z
     .string()
@@ -65,11 +65,11 @@ const OrganizationApiSchema = z.object({
     .min(2, 'Tên tổ chức phải có ít nhất 2 ký tự')
     .max(100, 'Tên tổ chức tối đa 100 ký tự'),
 
-  founderFullName: z
-    .string()
-    .trim()
-    .min(2, 'Tên người sáng lập phải có ít nhất 2 ký tự')
-    .max(50, 'Tên người sáng lập tối đa 50 ký tự'),
+  // founderFullName: z
+  //   .string()
+  //   .trim()
+  //   .min(2, 'Tên người sáng lập phải có ít nhất 2 ký tự')
+  //   .max(50, 'Tên người sáng lập tối đa 50 ký tự'),
 
   email: z.string().trim().email('Email không hợp lệ'),
 
