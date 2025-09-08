@@ -11,60 +11,55 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 import ImageUpload from '@/components/upload'
 import { useMultipleImageUpload } from '@/hooks'
+import CharityService from '@/services/charity.service'
+import { RootState } from '@/stores/store'
+import { charityFormSchema } from '@/types/charity.type'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { UploadIcon } from '@radix-ui/react-icons'
 import { useForm } from 'react-hook-form'
+import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router'
+import { toast } from 'react-toastify'
 import { z } from 'zod'
-
-const charityFormSchema = z.object({
-  name: z.string().min(3, 'Name must be at least 3 characters'),
-  startDate: z.date({
-    required_error: 'A date and time is required.'
-  }),
-  endDate: z.date({
-    required_error: 'A date and time is required.'
-  }),
-  location: z.string().min(5, 'Location must be at least 5 characters'),
-  description: z.string().min(10, 'Description is too short'),
-  todo: z.string().min(5, 'To-do is required'),
-  require: z.string().min(5, 'Requirement is required'),
-  numberOfVolunteers: z.string().refine((val) => /^\d+$/.test(val), {
-    message: 'Must be a positive integer'
-  }),
-  image: z
-    .instanceof(File)
-    .refine((file) => file.size < 5 * 1024 * 1024, {
-      message: 'Image must be smaller than 5MB'
-    })
-    .refine((file) => ['image/jpeg', 'image/png', 'image/webp'].includes(file.type), {
-      message: 'Image must be JPEG, PNG, or WebP'
-    })
-})
 
 type Form = z.infer<typeof charityFormSchema>
 
 const CharitieCreate = () => {
+  const { user } = useSelector((state: RootState) => state.auth)
+  const navigate = useNavigate()
+
   const form = useForm<Form>({
     resolver: zodResolver(charityFormSchema),
     defaultValues: {
-      name: '',
-      startDate: new Date(),
-      endDate: new Date(),
-      location: '',
+      charityName: '',
+      dateStart: new Date(),
+      dateEnd: new Date(),
+      destination: '',
       description: '',
-      numberOfVolunteers: ''
+      todo: '',
+      requirement: '',
+      numVolunteerRequire: ''
     }
   })
 
   const { handleImageChange, handlePreviewChange, handleImageRemove } = useMultipleImageUpload({
     maxSize: 5000000, // 5MB
     allowedTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'],
-    required: ['image'],
+    required: ['pic'],
     form
   })
 
-  const onSubmit = (data: Form) => {
-    console.log(data)
+  const onSubmit = async (data: Form) => {
+    const newData = {
+      ...data,
+      organizationId: user?.organizationId
+    }
+
+    const res = await CharityService.create(newData)
+    if (res) {
+      toast.success('Tạo thành công hoạt động từ thiện')
+      navigate('/organization/charities')
+    }
   }
 
   return (
@@ -82,7 +77,7 @@ const CharitieCreate = () => {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
               control={form.control}
-              name="name"
+              name="charityName"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Program Name</FormLabel>
@@ -95,22 +90,22 @@ const CharitieCreate = () => {
             />
             <FormField
               control={form.control}
-              name="startDate"
+              name="dateStart"
               render={({ field }) => <DateTimePicker field={field} label="Start Date & Time" />}
             />
             <FormField
               control={form.control}
-              name="endDate"
+              name="dateEnd"
               render={({ field }) => <DateTimePicker field={field} label="End Date & Time" />}
             />
             <FormField
               control={form.control}
-              name="location"
+              name="destination"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Location</FormLabel>
+                  <FormLabel>Destination</FormLabel>
                   <FormControl>
-                    <InputCustom type="text" placeholder="Enter event location" {...field} />
+                    <InputCustom type="text" placeholder="Enter event destination" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -121,7 +116,7 @@ const CharitieCreate = () => {
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Location</FormLabel>
+                  <FormLabel>Description</FormLabel>
                   <FormControl>
                     <Textarea placeholder="Describe the volunteer event" {...field} />
                   </FormControl>
@@ -144,10 +139,10 @@ const CharitieCreate = () => {
             />
             <FormField
               control={form.control}
-              name="require"
+              name="requirement"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Require</FormLabel>
+                  <FormLabel>Requirement</FormLabel>
                   <FormControl>
                     <Textarea placeholder="Describe the volunteer event" {...field} />
                   </FormControl>
@@ -157,7 +152,7 @@ const CharitieCreate = () => {
             />
             <FormField
               control={form.control}
-              name="numberOfVolunteers"
+              name="numVolunteerRequire"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Number of Volunteers Needed</FormLabel>
@@ -170,16 +165,16 @@ const CharitieCreate = () => {
             />
             <FormField
               control={form.control}
-              name="image"
+              name="pic"
               render={() => (
                 <FormItem>
                   <FormLabel>Upload Banner Image</FormLabel>
                   <FormControl>
                     <ImageUpload
                       className="border rounded-lg border-dashed p-6"
-                      onImageChange={handleImageChange('image')}
-                      onImagePreviewChange={handlePreviewChange('image')}
-                      onImageRemove={handleImageRemove('image')}
+                      onImageChange={handleImageChange('pic')}
+                      onImagePreviewChange={handlePreviewChange('pic')}
+                      onImageRemove={handleImageRemove('pic')}
                       placeholder="Select File"
                     >
                       <div className="space-y-1 flex flex-col items-center">

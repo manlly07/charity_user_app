@@ -100,6 +100,7 @@ export type User = JwtTokens & {
   username: string
   email: string
   role: string
+  organizationId: number
 }
 export {
   AccountSchema,

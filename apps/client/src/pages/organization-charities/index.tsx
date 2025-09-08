@@ -1,12 +1,18 @@
 import SearchInput from '@/components/search'
 import { Button } from '@/components/ui/button'
 import { DateRangePicker } from '@/components/ui/date-range-picker'
+import { useCharities } from '@/hooks'
 import { MagnifyingGlassIcon, PlusIcon } from '@radix-ui/react-icons'
 import { useNavigate } from 'react-router'
 import TableOrganization from './table'
 
 const Charities = () => {
   const navigate = useNavigate()
+
+  const { charities, isLoading, isError } = useCharities()
+
+  if (isLoading) return <p>Loading...</p>
+  if (isError) return <p>Failed to load</p>
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
@@ -35,7 +41,7 @@ const Charities = () => {
         </div>
       </div>
       <div className="space-y-6">
-        <TableOrganization />
+        <TableOrganization charityList={charities} />
       </div>
     </div>
   )
