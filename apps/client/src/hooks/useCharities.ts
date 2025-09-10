@@ -18,18 +18,24 @@ type TCharity = {
   eventStatus: TCharityStatus
   pic: string
 }
-export function useCharities() {
+
+type CharityFilters = { name?: string; from?: string; to?: string }
+
+export function useCharities(filters?: { name?: string; from?: string; to?: string }) {
   const { user } = useSelector((state: RootState) => state.auth)
 
-  const { data, error, isLoading, mutate } = useSWR(
-    user?.organizationId ? `/events/charity/${user.organizationId}` : null, // key
-    () => (user?.organizationId ? CharityService.getList(user.organizationId) : Promise.resolve([])) // fetcher
+  const key: [string, CharityFilters?] | null = user?.organizationId
+    ? [`/events/charity/${user.organizationId}`, filters]
+    : null
+
+  const { data, error, isLoading, mutate } = useSWR(key, ([url, f]) =>
+    user?.organizationId ? CharityService.getList(user.organizationId, f) : Promise.resolve([])
   )
 
   return {
     charities: error || !data ? [] : (data as TCharity[]),
     isLoading,
     isError: error,
-    mutate // dùng để revalidate hoặc update dữ liệu thủ công
+    mutate
   }
 }
