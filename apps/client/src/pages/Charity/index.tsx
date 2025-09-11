@@ -1,5 +1,7 @@
 import { Banner2, Event1, Event2, Event3 } from '@/assets'
 import { Button } from '@/components/ui/button'
+import CharityService from '@/services/charity.service'
+import { RootState } from '@/stores/store'
 import {
   CalendarIcon,
   CheckCircledIcon,
@@ -10,6 +12,10 @@ import {
   Share1Icon
 } from '@radix-ui/react-icons'
 import { Avatar, Badge, Progress } from '@radix-ui/themes'
+import { useMemo } from 'react'
+import { useSelector } from 'react-redux'
+import { useParams } from 'react-router'
+import useSWR from 'swr'
 
 const REQUIREMENTS = [
   'Age 16 or older',
@@ -28,6 +34,19 @@ const WHATWILLIDO = [
 ]
 
 const CharityDetail = () => {
+  const { user } = useSelector((state: RootState) => state.auth)
+  const { id } = useParams<{ id: string }>()
+  const charityId = id ? parseInt(id, 10) : 0
+
+  const { data, error, isLoading, mutate } = useSWR('/events/charity', () =>
+    CharityService.getCharityById(charityId, user?.id)
+  )
+
+  const charity = useMemo(() => {
+    if (error || !data) return null
+    return data
+  }, [data, error])
+
   return (
     <>
       <div className="relative">

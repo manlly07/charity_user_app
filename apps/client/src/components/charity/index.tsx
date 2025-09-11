@@ -1,12 +1,34 @@
 import { CharityEventResponseList } from '@/pages/home'
+import CharityService from '@/services/charity.service'
+import { RootState } from '@/stores/store'
 import { ClockIcon, RocketIcon } from '@radix-ui/react-icons'
 import dayjs from 'dayjs'
-import { Link } from 'react-router'
+import { useState } from 'react'
+import { useSelector } from 'react-redux'
+import { Link, Navigate } from 'react-router'
 import FollowIcon from '../follow'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { Button } from '../ui/button'
 
 const Charity = ({ data }: { data: CharityEventResponseList }) => {
+  const { user } = useSelector((state: RootState) => state.auth)
+  if (!user?.id) return <Navigate to={'/login'} />
+
+  const [joined, setJoined] = useState(data.joined)
+
+  const handleJoin = async () => {
+    try {
+      if (joined) {
+        await CharityService.leaveProgram(data.id, user.id)
+        setJoined(false)
+      } else {
+        await CharityService.joinProgram(data.id, user.id)
+        setJoined(true)
+      }
+    } catch (err) {
+      console.error(err)
+    }
+  }
   return (
     <div className="shadow rounded-lg overflow-hidden">
       <Link to={`/organize/charity/${data.id}`} className="image h-[192px] w-full rounded-t-lg ">
@@ -53,8 +75,15 @@ const Charity = ({ data }: { data: CharityEventResponseList }) => {
               </p>
             </div>
           </div>
-          <Button className="bg-primary-custom-color hover:bg-primary-custom-color/85 px-6">
-            Join Program
+          <Button
+            onClick={handleJoin}
+            className={
+              joined
+                ? 'bg-red-500 hover:bg-red-600 px-6'
+                : 'bg-primary-custom-color hover:bg-primary-custom-color/85 px-6'
+            }
+          >
+            {joined ? 'Out Program' : 'Join Program'}
           </Button>
         </div>
       </div>

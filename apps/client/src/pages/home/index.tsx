@@ -12,13 +12,16 @@ export type CharityEventResponseList = {
   name: string
   description: string
   requirement: string
+  todo: string
   destination: string
-  dateStart: string // ISO string từ LocalDateTime
+  dateStart: string
+  numVolunteerRequire: number
+  numVolunteerActual: number
 
   organization: {
     id: number
     name: string
-    avatar: string // map từ logo
+    avatar: string | null
   }
 
   joined: boolean
@@ -29,9 +32,7 @@ const Home = () => {
 
   if (!user?.id) return <Navigate to={'/login'} />
 
-  const { data, error, isLoading } = useSWR('/events/charity', () =>
-    CharityService.getDashboard(user?.id)
-  )
+  const { data, error } = useSWR('/events/charity', () => CharityService.getDashboard(user?.id))
 
   const charities = useMemo(() => {
     if (error || !data) return []
