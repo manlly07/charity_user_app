@@ -34,13 +34,12 @@ const AccountSchema = FormSchema.pick({
 }).extend({
   image: z
     .instanceof(File)
-    .refine((file) => file.type.startsWith('image/'), {
-      message: 'File phải là hình ảnh'
-    })
-    .refine((file) => file.size <= 5 * 1024 * 1024, {
-      message: 'Ảnh phải nhỏ hơn 5MB'
-    })
-    .nullable()
+    .or(
+      z.any().refine((val) => val instanceof File || val === undefined, {
+        message: 'Invalid file'
+      })
+    )
+    .optional()
 })
 
 // Schema cho đổi mật khẩu
@@ -98,9 +97,12 @@ export type JwtTokens = {
 export type User = JwtTokens & {
   id: number
   username: string
+  contact: string
   email: string
   role: string
   organizationId: number
+  active: boolean
+  pic: string | null
 }
 export {
   AccountSchema,

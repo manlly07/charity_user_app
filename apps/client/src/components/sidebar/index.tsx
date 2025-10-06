@@ -1,5 +1,7 @@
 import { cn } from '@/lib/utils'
+import { RootState } from '@/stores/store'
 import { BackpackIcon, ExitIcon, GearIcon, HeartIcon, HomeIcon } from '@radix-ui/react-icons'
+import { useSelector } from 'react-redux'
 import { Link, useLocation } from 'react-router'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 
@@ -34,21 +36,30 @@ const SIDEBAR = [
 
 const Sidebar = () => {
   const { pathname } = useLocation()
+  const { user } = useSelector((state: RootState) => state.auth)
+
   return (
     <div className="p-6 border-r border-[#E5E7EB] col-span-1 min-h-[calc(100vh-64px)] relative">
       <div className="fixed w-[calc(280px-2*24px)] h-[calc(100vh-64px-2*24px)]">
         <div className="space-y-8">
           <div className="flex gap-3 flex-col justify-center items-center w-full">
             <Avatar className="w-[120px] h-[120px]">
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>CN</AvatarFallback>
+              <AvatarImage src={user?.pic || ''} />
+              <AvatarFallback>{user?.username.charAt(0).toUpperCase()}</AvatarFallback>
             </Avatar>
             <div>
-              <p className="text-2xl font-semibold">John Anderson</p>
-              <p className="text-sm text-text-secondary">john.anderson@email.com</p>
-              <span className="block w-fit m-auto mt-1 text-sm rounded-xl px-3 py-1 text-primary-custom-color bg-primary-custom-color/40">
-                Active Volunteer
-              </span>
+              <p className="text-base font-semibold text-center">{user?.username}</p>
+              <p className="text-xs text-text-secondary text-center">{user?.email}</p>
+              {user?.active && (
+                <span className="block w-fit m-auto mt-1 text-sm rounded-xl px-3 py-1 text-primary-custom-color bg-primary-custom-color/40">
+                  Active Volunteer
+                </span>
+              )}
+              {!user?.active && (
+                <span className="block w-fit m-auto mt-1 text-sm rounded-xl px-3 py-1 text-red-500 bg-red-500/40">
+                  Inactive Volunteer
+                </span>
+              )}
             </div>
           </div>
           <div className="space-y-1">

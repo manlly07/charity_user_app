@@ -288,7 +288,11 @@ const TableCharities = () => {
           >
             <EyeOpenIcon />
           </Button>
-          <Button variant="ghost" size="icon" onClick={() => alert(`Editing campaign ${row.id}`)}>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => navigate(`/organization/charities/update/${row.original.id}`)}
+          >
             <Pencil2Icon />
           </Button>
         </div>

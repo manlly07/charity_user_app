@@ -1,16 +1,25 @@
 import SearchInput from '@/components/search'
 import { Button } from '@/components/ui/button'
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious
-} from '@/components/ui/pagination'
+import axiosInstance from '@/lib/api'
+import { RootState } from '@/stores/store'
+import { useMemo } from 'react'
+import { useSelector } from 'react-redux'
+import { Navigate } from 'react-router'
+import useSWR from 'swr'
 
 const DonationHistory = () => {
+  const { user } = useSelector((state: RootState) => state.auth)
+  if (!user?.id) return <Navigate to={'/login'} />
+  const { data, error } = useSWR('/charity/donation', async () => {
+    const res = await axiosInstance.get(`/events/donation/volunteer/${user?.id}/history`)
+    return res.data
+  })
+
+  const EVENTS = useMemo(() => {
+    if (error || !data) return []
+    return data
+  }, [data, error])
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -26,7 +35,7 @@ const DonationHistory = () => {
         </Button>
       </div>
       <div className="space-y-4">
-        {Array.from({ length: 5 }).map(() => (
+        {EVENTS.map(() => (
           <div className="rounded-lg overflow-hidden shadow flex justify-between">
             <div className="p-6 space-y-1">
               <p className="text-lg font-medium">Clean Water Initiative</p>
@@ -39,7 +48,7 @@ const DonationHistory = () => {
           </div>
         ))}
       </div>
-      <div className="m-auto mt-8">
+      {/* <div className="m-auto mt-8">
         <Pagination>
           <PaginationContent>
             <PaginationItem>
@@ -56,7 +65,7 @@ const DonationHistory = () => {
             </PaginationItem>
           </PaginationContent>
         </Pagination>
-      </div>
+      </div> */}
     </div>
   )
 }

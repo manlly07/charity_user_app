@@ -3,15 +3,6 @@ import SearchInput from '@/components/search'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious
-} from '@/components/ui/pagination'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import {
   Select,
@@ -21,9 +12,15 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select'
+import axiosInstance from '@/lib/api'
 import { cn } from '@/lib/utils'
+import { RootState } from '@/stores/store'
 import { ChevronDownIcon } from '@radix-ui/themes'
-import { useState } from 'react'
+import dayjs from 'dayjs'
+import { useMemo, useState } from 'react'
+import { useSelector } from 'react-redux'
+import { Navigate } from 'react-router'
+import useSWR from 'swr'
 
 const EVENTS = [
   {
@@ -60,6 +57,18 @@ const CharityHistory = () => {
   const [date, _setDate] = useState<Date | undefined>(new Date(2025, 5, 12))
   const [openFrom, setOpenFrom] = useState(false)
   const [dateFrom, _setDateFrom] = useState<Date | undefined>(undefined)
+  const { user } = useSelector((state: RootState) => state.auth)
+  if (!user?.id) return <Navigate to={'/login'} />
+  const { data, error } = useSWR('/charity/history', async () => {
+    const res = await axiosInstance.get(`/events/charity/volunteer/${user?.id}/history`)
+    return res.data
+  })
+
+  const EVENTS = useMemo(() => {
+    if (error || !data) return []
+    return data
+  }, [data, error])
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -102,40 +111,42 @@ const CharityHistory = () => {
         </Button>
       </div>
       <div className="space-y-4">
-        {EVENTS.map((event, _) => (
+        {EVENTS.map((event: any, _: number) => (
           <div key={_} className="rounded-lg overflow-hidden shadow flex">
-            <img src={event.image} width={200} height={160} className="object-cover" />
+            <img src={event?.pic ?? ''} width={200} height={160} className="object-cover" />
             <div className="p-6 space-y-3 flex-1">
               <div className="flex items-center gap-2">
-                <p className="text-lg font-medium">{event.title}</p>
+                <p className="text-lg font-medium">{event?.charityEventName}</p>
                 <Badge
                   variant={'secondary'}
                   className={cn('text-xs', {
                     'bg-primary-custom-color/10 text-primary-custom-color':
-                      event.registered === 'Registered',
-                    'bg-blue-500/10 text-blue-500': event.registered === 'Participated',
-                    'bg-red-500/10 text-red-500': event.registered === 'Missed'
+                      event?.eventStatus === 'Registered',
+                    'bg-blue-500/10 text-blue-500': event?.registered === 'Participated',
+                    'bg-red-500/10 text-red-500': event?.registered === 'CLOSED'
                   })}
                 >
-                  {event.registered}
+                  {event?.registered}
                 </Badge>
               </div>
-              <p className="text-base text-text-secondary">Local Food Bank</p>
+              <p className="text-base text-text-secondary">{event?.organizationName}</p>
               <div className="flex items-center justify-between w-full">
-                <p className="text-sm text-text-custom-color">Participated on October 15, 2023</p>
-                <Button
+                <p className="text-sm text-text-custom-color">
+                  Participated on {dayjs(event?.eventCreatedAt).format('MMM D, YYYY')}
+                </p>
+                {/* <Button
                   className="border-border-input-color text-primary-custom-color hover:text-primary-custom-color"
                   variant={'outline'}
                 >
                   See more
-                </Button>
+                </Button> */}
               </div>
             </div>
           </div>
         ))}
       </div>
       <div className="m-auto mt-8">
-        <Pagination>
+        {/* <Pagination>
           <PaginationContent>
             <PaginationItem>
               <PaginationPrevious href="#" />
@@ -150,7 +161,7 @@ const CharityHistory = () => {
               <PaginationNext href="#" />
             </PaginationItem>
           </PaginationContent>
-        </Pagination>
+        </Pagination> */}
       </div>
     </div>
   )

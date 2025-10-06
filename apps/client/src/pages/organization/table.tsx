@@ -16,6 +16,7 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table'
+import { useCharities } from '@/hooks'
 import { cn } from '@/lib/utils'
 import { EyeOpenIcon, Pencil2Icon } from '@radix-ui/react-icons'
 import {
@@ -25,7 +26,7 @@ import {
   getPaginationRowModel,
   useReactTable
 } from '@tanstack/react-table'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 type TCampaign = {
   id: number
   name: string
@@ -134,46 +135,66 @@ const campaigns: TCampaign[] = [
   }
 ]
 
-const columns: ColumnDef<TCampaign>[] = [
+type TCharityStatus = 'active' | 'inactive' | 'upcoming' | 'completed'
+
+type TCharity = {
+  id: number
+  charityName: string
+  description: string
+  destination: string
+  dateStart: string
+  dateEnd: string
+  numVolunteerRequire: number
+  numVolunteerActual?: number
+  note?: string
+  eventStatus: TCharityStatus
+  pic: string
+}
+
+const columns: ColumnDef<TCharity>[] = [
   {
-    accessorKey: 'name',
+    accessorKey: 'charityName',
     header: 'Campaign Name',
-    cell: ({ row }) => <div className="capitalize font-semibold">{row.getValue('name')}</div>
+    cell: ({ row }) => <div className="capitalize font-semibold">{row.getValue('charityName')}</div>
   },
   {
-    accessorKey: 'status',
+    accessorKey: 'eventStatus',
     header: 'Status',
     cell: ({ row }) => (
       <Badge
         variant={'secondary'}
         className={cn('text-xs', {
-          'bg-green-500/10 text-green-500': row.getValue('status') === 'active',
-          'bg-blue-500/10 text-blue-500': row.getValue('status') === 'completed',
-          'bg-yellow-500/10 text-yellow-500': row.getValue('status') === 'upcoming',
-          'bg-red-500/10 text-red-500': row.getValue('status') === 'cancelled'
+          'bg-green-500/10 text-green-500': row.getValue('eventStatus') === 'active',
+          'bg-blue-500/10 text-blue-500': row.getValue('eventStatus') === 'completed',
+          'bg-yellow-500/10 text-yellow-500': row.getValue('eventStatus') === 'upcoming',
+          'bg-red-500/10 text-red-500': row.getValue('eventStatus') === 'cancelled'
         })}
       >
-        {String(row.getValue('status')).charAt(0).toUpperCase() +
-          String(row.getValue('status')).slice(1)}
+        {String(row.getValue('eventStatus')).charAt(0).toUpperCase() +
+          String(row.getValue('eventStatus')).slice(1)}
       </Badge>
     )
   },
   {
-    accessorKey: 'startDate',
+    accessorKey: 'dateStart',
     header: 'Start Date',
-    cell: ({ row }) => new Date(row.getValue('startDate')).toLocaleDateString()
+    cell: ({ row }) => new Date(row.getValue('dateStart')).toLocaleDateString()
   },
   {
-    accessorKey: 'volunteers',
+    accessorKey: 'numVolunteerActual',
     header: 'Volunteers',
-    cell: ({ row }) => row.getValue('volunteers')
+    cell: ({ row }) => row.getValue('numVolunteerActual')
   },
   {
     id: 'actions',
     header: 'Actions',
     cell: ({ row }) => (
       <div className="flex items-center gap-2">
-        <Button variant="ghost" size="icon" onClick={() => alert(`Viewing campaign ${row.id}`)}>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => (window.location.href = `/organization/charities/${row.original.id}`)}
+        >
           <EyeOpenIcon />
         </Button>
         <Button variant="ghost" size="icon" onClick={() => alert(`Editing campaign ${row.id}`)}>
@@ -185,8 +206,11 @@ const columns: ColumnDef<TCampaign>[] = [
 ]
 
 const TableOrganization = () => {
+  const [filters, setFilters] = useState<{ name?: string; from?: string; to?: string }>()
+  const { charities, isLoading, isError } = useCharities(filters)
+
   const table = useReactTable({
-    data: campaigns,
+    data: charities,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel()

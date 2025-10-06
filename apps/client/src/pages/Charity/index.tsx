@@ -12,10 +12,12 @@ import {
   Share1Icon
 } from '@radix-ui/react-icons'
 import { Avatar, Badge, Progress } from '@radix-ui/themes'
+import dayjs from 'dayjs'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router'
 import useSWR from 'swr'
+import { CharityEventResponseList } from '../home'
 
 const REQUIREMENTS = [
   'Age 16 or older',
@@ -38,8 +40,9 @@ const CharityDetail = () => {
   const { id } = useParams<{ id: string }>()
   const charityId = id ? parseInt(id, 10) : 0
 
-  const { data, error, isLoading, mutate } = useSWR('/events/charity', () =>
-    CharityService.getCharityById(charityId, user?.id)
+  const { data, error, isLoading, mutate } = useSWR<CharityEventResponseList | null>(
+    '/events/charity',
+    () => CharityService.getCharityById(charityId, user?.id)
   )
 
   const charity = useMemo(() => {
@@ -51,18 +54,23 @@ const CharityDetail = () => {
     <>
       <div className="relative">
         <div className="image w-full h-[400px]">
-          <img src={Banner2} alt="banner" className="w-full h-full object-cover" />
+          <img src={charity?.pic ?? Banner2} alt="banner" className="w-full h-full object-cover" />
           <span className="absolute top-0 left-0 right-0 bottom-0 morphing"></span>
         </div>
         <div className="absolute bottom-8 left-8">
           <div className="flex gap-4 items-center">
             <Avatar
               size="6"
-              src="https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?&w=256&h=256&q=70&crop=focalpoint&fp-x=0.5&fp-y=0.3&fp-z=1&fit=crop"
-              fallback="A"
+              src={charity?.organization?.avatar ?? ''}
+              fallback={
+                <span className="text-white text-2xl font-bold">
+                  {charity?.organization?.name.charAt(0) || 'C'}
+                </span>
+              }
+              className="bg-transparent"
             />
             <div className="space-y-1 text-white">
-              <p className="text-2xl font-bold p-0">Green Earth Foundation</p>
+              <p className="text-2xl font-bold p-0">{charity?.organization?.name}</p>
               <p className="text-base text-white/80">Community Garden Project</p>
             </div>
           </div>
@@ -76,44 +84,58 @@ const CharityDetail = () => {
             </Badge>
             <div className="flex items-center gap-1.5 text-text-secondary">
               <CalendarIcon />
-              <span>Sep 15 - Oct 30, 2023</span>
+              <span>{`${dayjs(charity?.dateStart).format('MMM D, YYYY')}`}</span>
             </div>
             <div className="flex items-center gap-1.5 text-text-secondary">
               <PersonIcon />
-              <span>124 Joined</span>
+              <span>{charity?.numVolunteerActual ?? 0} Joined</span>
             </div>
             <div className="flex items-center gap-1.5 text-text-secondary">
               <PaperPlaneIcon />
-              <span>San Francisco, CA</span>
+              <span>{charity?.destination}</span>
             </div>
           </div>
-          <p className="text-3xl font-bold">
-            Community Garden Project: Growing Together for a Greener Tomorrow
-          </p>
+          <p className="text-3xl font-bold">{charity?.name ?? 'Community Garden Revitalization'}</p>
           <div className="space-y-4">
             <p className="text-text-secondary text-base font-normal">
-              Join us in transforming vacant urban spaces into thriving community gardens. This
-              project brings together volunteers, local schools, and community members to create
-              sustainable green spaces that benefit our entire neighborhood.
+              {charity?.description ??
+                'Join us in transforming vacant urban spaces into thriving community gardens. This project brings together volunteers, local schools, and community members to create sustainable green spaces that benefit our entire neighborhood'}
             </p>
-            <p className="text-text-secondary text-base font-normal">
+            {/* <p className="text-text-secondary text-base font-normal">
               Through this initiative, we aim to promote environmental awareness, provide fresh
               produce to local families, and create opportunities for community engagement and
               learning.
-            </p>
+            </p> */}
           </div>
           <div className="space-y-2">
             <div className="flex items-center justify-between text-text-custom-color text-sm">
               <span>Volunteer Spots</span>
-              <span>124/150</span>
+              <span>
+                {charity?.numVolunteerActual ?? 0}/{charity?.numVolunteerRequire}
+              </span>
             </div>
             <div>
-              <Progress value={50} radius="full" color="grass" />
+              <Progress
+                value={
+                  charity?.numVolunteerRequire
+                    ? ((charity?.numVolunteerActual ?? 0) / charity.numVolunteerRequire) * 100
+                    : 0
+                }
+                radius="full"
+                color="grass"
+              />
             </div>
           </div>
           <div className="flex items-center gap-8">
-            <Button className="bg-primary-custom-color hover:bg-primary-custom-color" size={'lg'}>
-              Join us Volunteer
+            <Button
+              className={
+                charity?.joined
+                  ? 'bg-red-500 hover:bg-red-600 px-6'
+                  : 'bg-primary-custom-color hover:bg-primary-custom-color/85 px-6'
+              }
+              size={'lg'}
+            >
+              {charity?.joined ? 'Leave Program' : 'Join us Volunteer'}
             </Button>
             <HeartIcon width={24} height={24} />
             <Share1Icon width={24} height={24} />
@@ -122,11 +144,11 @@ const CharityDetail = () => {
         <div className="grid grid-cols-3 gap-8">
           <div className="h-full col-span-1 p-6 space-y-4 bg-secondary-bg-color rounded">
             <p className="text-lg font-bold">Requirements</p>
-            <div className="space-y-3">
+            <div className="space-y-3 h-full">
               {REQUIREMENTS.map((item) => (
                 <div className="flex items-center gap-2" key={item}>
                   <CheckCircledIcon className="text-primary-custom-color" width={20} height={20} />
-                  <span className="text-base text-text-secondary">{item}</span>
+                  <span className="text-base text-text-secondary text-wrap">{item}</span>
                 </div>
               ))}
             </div>

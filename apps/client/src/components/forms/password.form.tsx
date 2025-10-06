@@ -1,12 +1,17 @@
+import axiosInstance from '@/lib/api'
+import { RootState } from '@/stores/store'
 import { PasswordSchema } from '@/types/auth.type'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import { useSelector } from 'react-redux'
 import { z } from 'zod'
 import InputCustom from '../Input'
 import { Button } from '../ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
 
 const PasswordForm = () => {
+  const { user } = useSelector((state: RootState) => state.auth)
+
   const form = useForm<z.infer<typeof PasswordSchema>>({
     resolver: zodResolver(PasswordSchema),
     defaultValues: {
@@ -16,11 +21,17 @@ const PasswordForm = () => {
     }
   })
 
+  const onSubmit = async (data: z.infer<typeof PasswordSchema>) => {
+    // /{id}/password
+    const response = await axiosInstance.put(`/profile/${user?.id}/password`, data)
+    console.log(response.data)
+  }
+
   return (
     <div className="shadow rounded-lg p-8 space-y-6">
       <p className="text-xl font-medium">Change Password</p>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit((data) => console.log(data))} className=" flex gap-9">
+        <form onSubmit={form.handleSubmit(onSubmit)} className=" flex gap-9">
           <div className="space-y-6 flex-1">
             <FormField
               control={form.control}

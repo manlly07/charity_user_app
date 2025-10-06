@@ -16,6 +16,7 @@ import {
   TableRow
 } from '@/components/ui/table'
 import { cn } from '@/lib/utils'
+import CharityService from '@/services/charity.service'
 import {
   ColumnDef,
   flexRender,
@@ -24,6 +25,7 @@ import {
   useReactTable
 } from '@tanstack/react-table'
 import { useMemo } from 'react'
+import useSWR from 'swr'
 
 type TCharityUser = {
   id: number
@@ -31,6 +33,7 @@ type TCharityUser = {
   email: string
   phone: string
   register: string
+  checkin?: boolean
 }
 
 const charityUsers: TCharityUser[] = [
@@ -176,12 +179,28 @@ const charityUsers: TCharityUser[] = [
   }
 ]
 
-const TableCharityUsers = () => {
+const TableCharityUsers = ({ id }: { id: string }) => {
+  const { data, error, mutate } = useSWR('/events/charity/checkin', () =>
+    CharityService.getUsersByCharityId(id)
+  )
+
+  const handleCheckin = async (userId: number) => {
+    // Call API to check-in or uncheck user
+    await CharityService.checkinUser(id, userId)
+    // Optionally, revalidate the SWR data here if needed
+    mutate('/events/charity/checkin')
+  }
+
+  const charityUsers = useMemo(() => {
+    if (error || !data) return []
+    return data
+  }, [data, error])
+
   const columns: ColumnDef<TCharityUser>[] = [
     {
-      accessorKey: 'name',
+      accessorKey: 'fullName',
       header: 'Full Name',
-      cell: ({ row }) => row.getValue('name')
+      cell: ({ row }) => row.getValue('fullName')
     },
     {
       accessorKey: 'email',
@@ -189,9 +208,9 @@ const TableCharityUsers = () => {
       cell: ({ row }) => row.getValue('email')
     },
     {
-      accessorKey: 'phone',
-      header: 'PhonePhone Number',
-      cell: ({ row }) => row.getValue('phone')
+      accessorKey: 'contact',
+      header: 'Phone Number',
+      cell: ({ row }) => row.getValue('contact')
     },
     {
       id: 'actions',
@@ -199,8 +218,12 @@ const TableCharityUsers = () => {
       cell: ({ row }) => (
         <Checkbox
           className="data-[state=checked]:border-blue-600 data-[state=checked]:bg-blue-600 data-[state=checked]:text-white dark:data-[state=checked]:border-blue-700 dark:data-[state=checked]:bg-blue-700"
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          checked={row.original.checkin}
+          onCheckedChange={(value) => {
+            console.log(row)
+            handleCheckin(row.original.id)
+            row.toggleSelected(!!value)
+          }}
         />
       )
     }

@@ -25,6 +25,7 @@ export type CharityEventResponseList = {
   }
 
   joined: boolean
+  followed: boolean
 }
 
 const Home = () => {

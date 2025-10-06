@@ -293,7 +293,7 @@ const TableCharities = ({ charityList }: TableCharitiesProps) => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => alert(`Editing campaign ${row.original.id}`)}
+            onClick={() => navigate(`/organization/charities/update/${row.original.id}`)}
           >
             <Pencil2Icon />
           </Button>

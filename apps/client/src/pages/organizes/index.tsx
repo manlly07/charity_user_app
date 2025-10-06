@@ -1,8 +1,14 @@
 import { Charity, DonateItem, FollowIcon } from '@/components'
 import { useUrlParams } from '@/hooks'
+import axiosInstance from '@/lib/api'
 import { cn } from '@/lib/utils'
+import CharityService from '@/services/charity.service'
+import { RootState } from '@/stores/store'
 import { Avatar } from '@radix-ui/themes'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
+import { Navigate, useParams } from 'react-router'
+import useSWR from 'swr'
 
 type Props = {}
 
@@ -20,6 +26,10 @@ const Menu = [
 ]
 
 const Organizes = (_props: Props) => {
+  const { id } = useParams<{ id: string }>()
+  const { user } = useSelector((state: RootState) => state.auth)
+  if (!user?.id) return <Navigate to={'/login'} />
+
   const { setParam, setParams, getParam, hasParam } = useUrlParams<SearchParams>({
     trackParams: ['q'],
     replace: false
@@ -39,25 +49,46 @@ const Organizes = (_props: Props) => {
     }
   }, [query])
 
+  const { data, error, mutate } = useSWR('/organizes/', async () => {
+    const res = await axiosInstance.get(`/events/organization/${id}`)
+    return res.data
+  })
+
+  const [followed, setFollowed] = useState(data?.followed || false)
+
+  console.log(data)
+
+  const handleFollow = async () => {
+    try {
+      if (followed) {
+        await CharityService.unfollowOrganization(data.id, user.id)
+        setFollowed(false)
+      } else {
+        await CharityService.followOrganization(data.id, user.id)
+        setFollowed(true)
+      }
+      mutate()
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
   return (
     <div className="max-w-[1440px] w-full m-auto py-8 px-6 space-y-4">
       <div className="info flex items-center justify-between">
         <div className="flex gap-8">
           <Avatar
             size="8"
-            src="https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?&w=256&h=256&q=70&crop=focalpoint&fp-x=0.5&fp-y=0.3&fp-z=1&fit=crop"
-            fallback="A"
+            src={data?.logo || ''}
+            fallback={data?.organizationName?.charAt(0) ?? 'A'}
           />
           <div className="space-y-4">
-            <p className="text-[32px] font-bold p-0">Global Hope Foundation</p>
-            <p className="text-base text-[#4B5563]">Hosted by Sarah Johnson</p>
-            <p className="text-lg text-[#4B5563] line-clamp-1">
-              Empowering communities through education and sustainable development. We believe in
-              creating lasting positive change through collaborative efforts.
-            </p>
+            <p className="text-[32px] font-bold p-0">{data?.organizationName}</p>
+            <p className="text-base text-[#4B5563]">Hosted by {data?.owner}</p>
+            <p className="text-lg text-[#4B5563] line-clamp-1">{data?.description}</p>
           </div>
         </div>
-        <FollowIcon />
+        <FollowIcon followed={data?.followed} onClick={handleFollow} />
       </div>
       <div className="flex gap-8 border-b border-input">
         {Menu.map((item) => (
@@ -81,15 +112,15 @@ const Organizes = (_props: Props) => {
         })}
       >
         {query === 'charity' &&
-          Array.from({ length: 4 }).map((_, index) => (
+          (data?.charities || []).map((_, index: number) => (
             <div className="col-span-1" key={index}>
-              <Charity />
+              <Charity data={_} />
             </div>
           ))}
         {query === 'donation' &&
-          Array.from({ length: 15 }).map((_, index) => (
+          (data?.donations || []).map((_, index: number) => (
             <div className="col-span-1" key={index}>
-              <DonateItem />
+              <DonateItem donation={_} />
             </div>
           ))}
       </div>

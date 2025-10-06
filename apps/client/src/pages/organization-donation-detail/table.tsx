@@ -14,7 +14,9 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table'
+import { Donation } from '@/hooks/useDonations'
 import { cn } from '@/lib/utils'
+import DonationService from '@/services/donation.service'
 import {
   ColumnDef,
   flexRender,
@@ -22,7 +24,10 @@ import {
   getPaginationRowModel,
   useReactTable
 } from '@tanstack/react-table'
+import dayjs from 'dayjs'
 import { useMemo } from 'react'
+import { Navigate, useParams } from 'react-router'
+import useSWR from 'swr'
 
 type TDonationUser = {
   id: number
@@ -197,11 +202,20 @@ const donationUsers: TDonationUser[] = [
 ]
 
 const TableCharityUsers = () => {
-  const columns: ColumnDef<TDonationUser>[] = [
+  const { id } = useParams<{ id: string }>()
+  if (!id) return <Navigate to="/organization/donations" replace />
+  const { data, error } = useSWR('/events/charity', () => DonationService.getUsersByDonationId(id))
+
+  const donationUsers = useMemo(() => {
+    if (error || !data) return []
+    return data
+  }, [data, error])
+
+  const columns: ColumnDef<Donation>[] = [
     {
-      accessorKey: 'name',
+      accessorKey: 'fullName',
       header: 'Full Name',
-      cell: ({ row }) => row.getValue('name')
+      cell: ({ row }) => row.getValue('fullName')
     },
     {
       accessorKey: 'email',
@@ -209,26 +223,28 @@ const TableCharityUsers = () => {
       cell: ({ row }) => row.getValue('email')
     },
     {
-      accessorKey: 'phone',
-      header: 'PhonePhone Number',
-      cell: ({ row }) => row.getValue('phone')
+      accessorKey: 'contact',
+      header: 'Phone Number',
+      cell: ({ row }) => row.getValue('contact')
     },
     {
-      accessorKey: 'amount',
+      accessorKey: 'donateAmount',
       header: 'Amount',
       cell: ({ row }) => (
         <div className="text-primary-custom-color font-semibold">
-          {new Intl.NumberFormat('en-US', {
+          {new Intl.NumberFormat('vi-VN', {
             style: 'currency',
-            currency: 'USD'
-          }).format(row.getValue('amount'))}
+            currency: 'VND'
+          }).format(row.getValue('donateAmount'))}
         </div>
       )
     },
     {
-      accessorKey: 'date',
+      accessorKey: 'donateTime',
       header: 'Date & Time',
-      cell: ({ row }) => row.getValue('date')
+      cell: ({ row }) => {
+        dayjs(row.getValue('donateTime')).format('YYYY-MM-DD')
+      }
     }
   ]
 

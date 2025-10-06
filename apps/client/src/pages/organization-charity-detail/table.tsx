@@ -16,6 +16,7 @@ import {
   TableRow
 } from '@/components/ui/table'
 import { cn } from '@/lib/utils'
+import CharityService from '@/services/charity.service'
 import { EyeOpenIcon } from '@radix-ui/react-icons'
 import {
   ColumnDef,
@@ -24,8 +25,10 @@ import {
   getPaginationRowModel,
   useReactTable
 } from '@tanstack/react-table'
+import dayjs from 'dayjs'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router'
+import useSWR from 'swr'
 
 type TCharityUser = {
   id: number
@@ -178,13 +181,21 @@ const charityUsers: TCharityUser[] = [
   }
 ]
 
-const TableCharityUsers = () => {
+const TableCharityUsers = ({ id }: { id: string }) => {
   const navigate = useNavigate()
+
+  const { data, error } = useSWR('/events/charity', () => CharityService.getUsersByCharityId(id))
+
+  const charityUsers = useMemo(() => {
+    if (error || !data) return []
+    return data
+  }, [data, error])
+
   const columns: ColumnDef<TCharityUser>[] = [
     {
-      accessorKey: 'name',
+      accessorKey: 'fullName',
       header: 'Full Name',
-      cell: ({ row }) => row.getValue('name')
+      cell: ({ row }) => row.getValue('fullName')
     },
     {
       accessorKey: 'email',
@@ -192,14 +203,14 @@ const TableCharityUsers = () => {
       cell: ({ row }) => row.getValue('email')
     },
     {
-      accessorKey: 'phone',
-      header: 'PhonePhone Number',
-      cell: ({ row }) => row.getValue('phone')
+      accessorKey: 'contact',
+      header: 'Phone Number',
+      cell: ({ row }) => row.getValue('contact')
     },
     {
-      accessorKey: 'register',
+      accessorKey: 'joinDate',
       header: 'Registration Date',
-      cell: ({ row }) => row.getValue('register')
+      cell: ({ row }) => dayjs(row.getValue('joinDate')).format('YYYY-MM-DD')
     },
     {
       id: 'actions',

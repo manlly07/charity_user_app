@@ -11,10 +11,13 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table'
+import DonationService from '@/services/donation.service'
 import { CalendarIcon, PaperPlaneIcon, PersonIcon } from '@radix-ui/react-icons'
 import { ChevronDownIcon, Progress } from '@radix-ui/themes'
-import { useState } from 'react'
-import { useNavigate } from 'react-router'
+import dayjs from 'dayjs'
+import { useMemo, useState } from 'react'
+import { useNavigate, useParams } from 'react-router'
+import useSWR from 'swr'
 
 const CharityDetail = () => {
   const [openFrom, setOpenFrom] = useState(false)
@@ -22,18 +25,40 @@ const CharityDetail = () => {
   const [openTo, setOpenTo] = useState(false)
   const [dateTo, setDateTo] = useState<Date | undefined>(undefined)
   const navigate = useNavigate()
+
+  const { id } = useParams<{ id: string }>()
+  const donationId = id ? parseInt(id, 10) : 0
+
+  const { data, error } = useSWR('/events/donation/' + id, () =>
+    DonationService.getDonationById(donationId)
+  )
+
+  const donation = useMemo(() => {
+    if (error || !data) return null
+    return data
+  }, [data, error])
+
+  const { data: u, error: eu } = useSWR('/events/donation/user', () =>
+    DonationService.getUsersByDonationId(String(id))
+  )
+
+  const donationUsers = useMemo(() => {
+    if (eu || !u) return []
+    return u
+  }, [u, eu])
+
   return (
     <>
       <div className="relative">
         <div className="image w-full h-[400px]">
-          <img src={Banner3} alt="banner" className="w-full h-full object-cover" />
+          <img src={donation?.pic ?? Banner3} alt="banner" className="w-full h-full object-cover" />
           <span className="absolute top-0 left-0 right-0 bottom-0 morphing"></span>
         </div>
         <div className="absolute bottom-8 left-8">
           <div className="flex gap-4 items-center">
             <div className="space-y-1 text-white">
-              <p className="text-2xl font-bold p-0">Chung Tay Vì Trẻ Em Vùng Cao</p>
-              <p className="text-base text-white/80">Mang cơ hội học tập đến trẻ em Yên Bái</p>
+              <p className="text-2xl font-bold p-0">{donation?.title}</p>
+              <p className="text-base text-white/80">{donation?.description}</p>
             </div>
           </div>
         </div>
@@ -43,15 +68,27 @@ const CharityDetail = () => {
           <div className="grid grid-cols-3 gap-4">
             <div className="grid-cols-1 space-y-1">
               <p className="text-text-custom-color text-base font-medium">Đã quyên góp</p>
-              <p className="text-2xl font-bold text-primary-custom-color">120.000.000₫</p>
+              <p className="text-2xl font-bold text-primary-custom-color">
+                {new Intl.NumberFormat('vi-VN', {
+                  style: 'currency',
+                  currency: 'VND'
+                }).format(parseFloat(donation?.totalDonated as string) || 0)}{' '}
+              </p>
             </div>
             <div className="grid-cols-1 space-y-1">
               <p className="text-text-custom-color text-base font-medium">Mục tiêu</p>
-              <p className="text-2xl font-bold ">500.000.000₫</p>
+              <p className="text-2xl font-bold ">
+                {new Intl.NumberFormat('vi-VN', {
+                  style: 'currency',
+                  currency: 'VND'
+                }).format(parseFloat(donation?.moneyNeed as string) || 0)}{' '}
+              </p>
             </div>
             <div className="grid-cols-1 space-y-1">
               <p className="text-text-custom-color text-base font-medium">Thời gian còn lại</p>
-              <p className="text-2xl font-bold text-primary-custom-color">Còn 15 ngày nữa</p>
+              <p className="text-2xl font-bold text-primary-custom-color">
+                {dayjs(donation?.dateEnd).diff(dayjs(donation?.dateStart), 'day')} ngày
+              </p>
             </div>
           </div>
           <div>
@@ -60,7 +97,7 @@ const CharityDetail = () => {
           <Button
             className="w-full bg-[#2E7D32] hover:bg-primary-custom-color cursor-pointer"
             size={'lg'}
-            onClick={() => navigate('/donate/1')}
+            onClick={() => navigate('/donate/' + donationId)}
           >
             Quyên Góp Ngay
           </Button>
@@ -169,16 +206,21 @@ const CharityDetail = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                <TableRow className="text-base">
-                  <TableCell className="font-medium">Nguyễn Văn A</TableCell>
-                  <TableCell className="text-primary-custom-color font-medium">
-                    2.000.000₫
-                  </TableCell>
-                  <TableCell className="font-normal text-text-secondary">
-                    Chúc các em có một môi trường học tập tốt
-                  </TableCell>
-                  <TableCell>2 giờ trước</TableCell>
-                </TableRow>
+                {(donationUsers ?? []).map((item: any) => (
+                  <TableRow className="text-base">
+                    <TableCell className="font-medium">{item?.fullName}</TableCell>
+                    <TableCell className="text-primary-custom-color font-medium">
+                      {new Intl.NumberFormat('vi-VN', {
+                        style: 'currency',
+                        currency: 'VND'
+                      }).format(parseFloat(item?.totalDonated as string) || 0)}{' '}
+                    </TableCell>
+                    <TableCell className="font-normal text-text-secondary">
+                      {item?.note || 'Không có lời nhắn'}
+                    </TableCell>
+                    <TableCell>2 giờ trước</TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </div>

@@ -6,7 +6,60 @@ import dayjs from 'dayjs'
 import { toast } from 'react-toastify'
 import { z } from 'zod'
 
+export interface CharityEventRequest {
+  charityName: string
+  organizationId: number | number
+  description?: string
+  destination?: string
+  todo?: string
+  requirement?: string
+  dateStart: Date
+  dateEnd: Date
+  numVolunteerRequire: number
+  note?: string
+  pic?: File // hoặc Express.Multer.File nếu bạn dùng NestJS + Multer
+}
+
 export default class CharityService {
+  static async followOrganization(eventId: number, volunteerId: number) {
+    try {
+      console.log(eventId, volunteerId)
+      const res = await axiosInstance.post(`/follow/${volunteerId}/${eventId}`)
+      return res.data
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || error.message)
+    }
+  }
+
+  static async unfollowOrganization(eventId: number, volunteerId: number) {
+    try {
+      const res = await axiosInstance.delete(`/follow/${volunteerId}/${eventId}`)
+      return res.data
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || error.message)
+    }
+  }
+
+  static async checkinUser(eventId: string, volunteerId: number) {
+    try {
+      const res = await axiosInstance.post(`/events/charity/${eventId}/checkin`, null, {
+        params: { volunteerId }
+      })
+      return res.data
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || error.message)
+    }
+  }
+
+  static async getUsersByCharityId(eventId: string) {
+    try {
+      const res = await axiosInstance.get(`/events/charity/${eventId}/users`)
+      return res.data
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || error.message)
+    }
+  }
+
   static async joinProgram(eventId: number, volunteerId: number) {
     try {
       const res = await axiosInstance.post(`/events/charity/${eventId}/join`, null, {
@@ -93,6 +146,13 @@ export default class CharityService {
   static async updateStatus(id: number, status: RequestStatus) {
     const res = await axiosInstance.put(`/requests/${id}`, {
       status
+    })
+    return res.data
+  }
+
+  static async update(id: string, data: CharityEventRequest) {
+    const res = await axiosInstance.put(`/events/charity/${id}`, {
+      data
     })
     return res.data
   }
