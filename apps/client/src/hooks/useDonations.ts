@@ -6,6 +6,7 @@ import useSWR from 'swr'
 export type Donation = {
   id: number
   organizationId: number
+  organizationName: string
   title: string
   description: string | null
   moneyNeed: string // BigDecimal bên Java thường trả về string khi JSON

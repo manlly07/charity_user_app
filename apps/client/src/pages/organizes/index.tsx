@@ -50,17 +50,20 @@ const Organizes = (_props: Props) => {
   }, [query])
 
   const { data, error, mutate } = useSWR('/organizes/', async () => {
-    const res = await axiosInstance.get(`/events/organization/${id}`)
+    const res = await axiosInstance.get(`/events/organization/${id}`, {
+      params: {
+        volunteerId: user.id
+      }
+    })
     return res.data
   })
 
   const [followed, setFollowed] = useState(data?.followed || false)
 
-  console.log(data)
-
   const handleFollow = async () => {
     try {
-      if (followed) {
+      if (data?.followed) {
+        console.log()
         await CharityService.unfollowOrganization(data.id, user.id)
         setFollowed(false)
       } else {
@@ -112,13 +115,13 @@ const Organizes = (_props: Props) => {
         })}
       >
         {query === 'charity' &&
-          (data?.charities || []).map((_, index: number) => (
+          (data?.charities || []).map((_: any, index: number) => (
             <div className="col-span-1" key={index}>
               <Charity data={_} />
             </div>
           ))}
         {query === 'donation' &&
-          (data?.donations || []).map((_, index: number) => (
+          (data?.donations || []).map((_: any, index: number) => (
             <div className="col-span-1" key={index}>
               <DonateItem donation={_} />
             </div>

@@ -1,20 +1,11 @@
 import SearchInput from '../search'
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue
-} from '../ui/select'
 
 const SubHeader = () => {
   return (
     <div className="bg-[#F9FAFB]">
       <div className="max-w-[1440px] w-full m-auto flex items-center justify-between py-4 px-6 gap-6">
         <SearchInput className="max-w-[600px]" />
-        <div className="overflow-hidden">
+        {/* <div className="overflow-hidden">
           <Select>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Select a fruit" />
@@ -30,7 +21,7 @@ const SubHeader = () => {
               </SelectGroup>
             </SelectContent>
           </Select>
-        </div>
+        </div> */}
       </div>
     </div>
   )

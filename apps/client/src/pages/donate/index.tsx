@@ -1,6 +1,5 @@
 import { CheckIcon, QrCode } from '@/assets'
 import { InputCustom } from '@/components'
-import { Checkbox } from '@/components/ui/checkbox'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import {
   Form,
@@ -10,50 +9,98 @@ import {
   FormLabel,
   FormMessage
 } from '@/components/ui/form'
+import DonationService from '@/services/donation.service'
 import { formatVND } from '@/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Badge, Progress } from '@radix-ui/themes'
+import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
+import { useParams } from 'react-router'
+import useSWR from 'swr'
 import { z } from 'zod'
 const FormSchema = z.object({
   name: z.string().trim().email().max(255, 'Name must be at most 255 characters long'),
   price: z.number().min(0),
-  description: z.string().trim().min(0),
-  is_name: z.boolean()
+  description: z.string().trim().min(0)
 })
 
 const PRICES = [100000, 200000, 500000, 1000000]
 
 const CharityDetail = () => {
+  const { id } = useParams<{ id: string }>()
+  const donationId = id ? parseInt(id, 10) : 0
+
+  const { data, error } = useSWR('/events/donation/' + id, () =>
+    DonationService.getDonationById(donationId)
+  )
+
+  const donation = useMemo(() => {
+    if (error || !data) return null
+
+    const total = parseFloat(data.totalDonated) || 0
+    const need = parseFloat(data.moneyNeed) || 0
+    const percent = need > 0 ? Math.min(100, (total / need) * 100) : 0
+
+    return {
+      ...data,
+      totalFormatted: new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(
+        total
+      ),
+      needFormatted: new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(
+        need
+      ),
+      percent
+    }
+  }, [data, error])
+
   const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema)
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      name: '',
+      price: 100000,
+      description: ''
+    }
   })
+
+  const description = form.watch('description')
+
+  const qrCode = useMemo(() => {
+    if (!donation || description.trim() === '') return QrCode
+
+    // Tạo URL mã QR với thông tin chuyển khoản
+    const qrData =
+      `https://img.vietqr.io/image/MB-${donation?.bankAccount}-qr_only.png?amount=` +
+      form.getValues('price') +
+      '&addInfo=' +
+      encodeURIComponent(description)
+    return qrData
+  }, [description])
+
   return (
     <div className="max-w-[750px] w-full m-auto p-8 space-y-9 shadow-lg rounded-xl mb-12">
       <div className="space-y-2">
         <Badge color="grass" radius="full">
           Đang kêu gọi
         </Badge>
-        <p className="text-2xl font-bold">Hỗ Trợ Nạn Nhân Lũ Lụt Miền Trung</p>
+        <p className="text-2xl font-bold">{donation?.title}</p>
         <div className="text-base text-text-secondary">
           <p className="flex items-center gap-2">
-            Tổ chức bởi: Quỹ Từ Thiện Green Hearts
+            Tổ chức bởi: {donation?.organizationName}
             <img src={CheckIcon} alt="" width={20} height={20} />
           </p>
-          <p>Mã số thuế: 0123456789</p>
         </div>
       </div>
       <div className="space-y-4">
-        <Progress radius="full" value={50} color="grass" size={'3'} />
+        <Progress radius="full" value={donation?.percent} color="grass" size={'3'} />
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <div>
               <p className="font-medium text-sm">Đã quyên góp</p>
-              <p className="font-bold text-sm text-[#2E7D32]">152.500.000₫</p>
+              <p className="font-bold text-sm text-[#2E7D32]">{donation?.totalFormatted}</p>
             </div>
             <div>
               <p className="font-medium text-sm text-right">Mục tiêu</p>
-              <p className="font-medium text-sm text-text-secondary">500.000.000₫</p>
+              <p className="font-medium text-sm text-text-secondary">{donation?.needFormatted}</p>
             </div>
           </div>
           <p className=" text-sm text-text-secondary">Thời gian còn lại: 15 ngày</p>
@@ -74,7 +121,7 @@ const CharityDetail = () => {
               </FormItem>
             )}
           />
-          <FormField
+          {/* <FormField
             control={form.control}
             name="is_name"
             render={({ field }) => (
@@ -93,7 +140,7 @@ const CharityDetail = () => {
                 </FormLabel>
               </FormItem>
             )}
-          />
+          /> */}
           <div className="space-y-4">
             <FormField
               control={form.control}
@@ -135,27 +182,31 @@ const CharityDetail = () => {
           <div className="p-6 bg-[#F8F9FA] border border-border rounded-lg space-y-6 text-center">
             <p className="text-base font-medium">Quét mã QR để quyên góp</p>
             <div className="image w-60 h-60 m-auto">
-              <img src={QrCode} alt="" />
+              <img src={qrCode} alt="" />
             </div>
             <p className="text-sm text-text-secondary">
               Quét mã QR bằng ứng dụng ngân hàng hoặc ví điện tử
             </p>
             <div className="space-y-2 [&>*]:text-sm text-text-secondary text-left">
-              <p>
+              {/* <p>
                 <span>Tên TK: </span>
                 <span>QUỸ TỪ THIỆN GREEN HEARTS</span>
-              </p>
+              </p> */}
               <p>
                 <span>Số TK: </span>
-                <span>123 456 789</span>
+                <span>{donation?.bankAccount}</span>
               </p>
               <p>
                 <span>Ngân hàng: </span>
-                <span>Vietcombank </span>
+                <span>MB </span>
               </p>
               <p>
                 <span>Nội dung CK: </span>
-                <span>[Họ tên] ủng hộ lũ lụt miền Trung</span>
+                <span>
+                  {description.trim() === ''
+                    ? '[Họ tên] ủng hộ lũ lụt miền Trung'
+                    : description.trim()}
+                </span>
               </p>
             </div>
           </div>

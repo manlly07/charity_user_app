@@ -1,4 +1,4 @@
-import { Charity, Notifications, OrganizeFollow } from '@/components'
+import { Charity, OrganizeFollow } from '@/components'
 import CharityService from '@/services/charity.service'
 import { RootState } from '@/stores/store'
 import { useMemo } from 'react'
@@ -30,8 +30,7 @@ export type CharityEventResponseList = {
 
 const Home = () => {
   const { user } = useSelector((state: RootState) => state.auth)
-
-  if (!user?.id) return <Navigate to={'/login'} />
+  if (!user) return <Navigate to={'/login'} />
 
   const { data, error } = useSWR('/events/charity', () => CharityService.getDashboard(user?.id))
 
@@ -53,11 +52,11 @@ const Home = () => {
             <Charity data={_} key={index} />
           ))}
         </div>
-        <div className="hidden md:block col-span-1">
+        {/* <div className="hidden md:block col-span-1">
           <div className="sticky top-20">
             <Notifications />
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   )

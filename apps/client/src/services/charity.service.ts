@@ -99,7 +99,11 @@ export default class CharityService {
 
   static async getDashboard(id: number) {
     try {
-      const res = await axiosInstance.get('/events/charity?id=' + id)
+      const res = await axiosInstance.get('/events/charity', {
+        params: {
+          id
+        }
+      })
       return res.data
     } catch (error: any) {
       toast.error(error?.response?.data?.message || error.message)

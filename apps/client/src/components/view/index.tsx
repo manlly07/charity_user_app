@@ -27,7 +27,7 @@ const View = (props: Props) => {
   document.title = props.title
 
   useAuth(props?.is_public)
-
+  console.log('after user auth')
   const { user } = useSelector((state: RootState) => state.auth)
 
   // check if path include admin, and user.role == ADMIN, CONTINUE, else path include admin, user.role === USER => NAVIGATE '/'
@@ -39,7 +39,7 @@ const View = (props: Props) => {
   useEffect(() => {
     const path = window.location.pathname
 
-    if (user?.role === 'ADMIN') {
+    if (user?.role === 'ROLE_ADMIN') {
       // Nếu không phải path admin, login, register => redirect về /admin
       if (!path.includes('admin') && !path.includes('login') && !path.includes('register')) {
         navigate('/admin')
