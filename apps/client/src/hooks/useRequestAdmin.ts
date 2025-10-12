@@ -42,14 +42,10 @@ type CharityFilters = { search?: string }
 export function useRequestAdmin(filters?: { search?: string }) {
   const { user } = useSelector((state: RootState) => state.auth)
 
-  const key: [string, CharityFilters?] | null = user?.organizationId
-    ? [`/admin/request`, filters]
-    : null
+  const key: [string, CharityFilters?] | null = user ? [`/admin/request`, filters] : null
 
   const { data, error, isLoading, mutate } = useSWR(key, ([url, f]) =>
-    user?.organizationId
-      ? RequestAminService.getAllRequests(f as CharityFilters)
-      : Promise.resolve([])
+    user ? RequestAminService.getAllRequests(f as CharityFilters) : Promise.resolve([])
   )
 
   return {

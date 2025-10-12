@@ -4,6 +4,7 @@ import { PasswordSchema } from '@/types/auth.type'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useSelector } from 'react-redux'
+import { toast } from 'react-toastify'
 import { z } from 'zod'
 import InputCustom from '../Input'
 import { Button } from '../ui/button'
@@ -23,8 +24,15 @@ const PasswordForm = () => {
 
   const onSubmit = async (data: z.infer<typeof PasswordSchema>) => {
     // /{id}/password
-    const response = await axiosInstance.put(`/profile/${user?.id}/password`, data)
-    console.log(response.data)
+    try {
+      const response = await axiosInstance.put(`/profile/${user?.accountId}/password`, data)
+      if (response.status === 200) {
+        toast.success('Đổi mật khẩu thành công')
+        form.reset()
+      }
+    } catch (error) {
+      toast.error('Đổi mật khẩu thất bại, vui lòng thử lại')
+    }
   }
 
   return (
@@ -61,7 +69,7 @@ const PasswordForm = () => {
             />
             <FormField
               control={form.control}
-              name="newPassword"
+              name="confirmPassword"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Confirm New Password</FormLabel>

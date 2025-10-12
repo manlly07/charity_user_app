@@ -23,6 +23,8 @@ const Volunteers = () => {
     setFilters(searchFilters)
   }
 
+  console.log(volunteers)
+
   if (isLoading) return <p>Loading...</p>
   if (isError) return <p>Failed to load</p>
   return (

@@ -6,13 +6,13 @@ import useSWR from 'swr'
 export enum EEventStatus {
   UPCOMING = 'upcoming',
   ONGOING = 'ONGOING',
-  COMPLETED = 'completed',
+  COMPLETED = 'COMPLETED',
   CANCELLED = 'CANCELLED',
   OPEN = 'OPEN',
   CLOSED = 'CLOSED',
   FULFILLED = 'FULFILLED',
-  ACTIVE = 'active',
-  INACTIVE = 'inactive'
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE'
 }
 // 👆 sửa lại cho khớp enum EEventStatus bạn đang có trong backend
 
@@ -44,14 +44,10 @@ type CharityFilters = { search?: string }
 export function useDonationAdmin(filters?: { search?: string }) {
   const { user } = useSelector((state: RootState) => state.auth)
 
-  const key: [string, CharityFilters?] | null = user?.organizationId
-    ? [`/admin/organizations`, filters]
-    : null
+  const key: [string, CharityFilters?] | null = user ? [`/admin/organizations`, filters] : null
 
   const { data, error, isLoading, mutate } = useSWR(key, ([url, f]) =>
-    user?.organizationId
-      ? DonationAdminService.getAllDonations(f as CharityFilters)
-      : Promise.resolve([])
+    user ? DonationAdminService.getAllDonations(f as CharityFilters) : Promise.resolve([])
   )
 
   return {

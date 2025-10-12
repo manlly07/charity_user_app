@@ -107,28 +107,30 @@ const CharityDetail = () => {
             <PersonIcon className="text-primary-custom-color" width={24} height={24} />
             <div className="">
               <p className="text-text-custom-color text-sm">Tổ chức</p>
-              <p className="text-base font-medium">Quỹ Từ Thiện ABC</p>
+              <p className="text-base font-medium">{donation?.organizationName}</p>
             </div>
           </div>
           <div className="col-span-1 flex items-center gap-3">
             <CalendarIcon className="text-primary-custom-color" width={24} height={24} />
             <div className="">
               <p className="text-text-custom-color text-sm">Thời gian</p>
-              <p className="text-base font-medium">01/06 - 30/06/2025</p>
+              <p className="text-base font-medium">
+                {`${dayjs(donation?.dateStart).format('DD/MM')} - ${dayjs(donation?.dateEnd).format('DD/MM/YYYY')}`}
+              </p>
             </div>
           </div>
           <div className="col-span-1 flex items-center gap-3">
             <PaperPlaneIcon className="text-primary-custom-color" width={24} height={24} />
             <div className="">
               <p className="text-text-custom-color text-sm">Địa điểm</p>
-              <p className="text-base font-medium">Yên Bái, Việt Nam</p>
+              <p className="text-base font-medium">-</p>
             </div>
           </div>
         </div>
         <div className="space-y-6">
           <p className="text-2xl font-bold">Về Chiến Dịch</p>
           <div className="text-base text-text-secondary space-y-4">
-            <p>
+            {/* <p>
               Tại các huyện vùng cao Yên Bái, nhiều em nhỏ vẫn đang thiếu thốn cơ hội tiếp cận giáo
               dục. Chiến dịch này nhằm:
             </p>
@@ -136,7 +138,8 @@ const CharityDetail = () => {
               <li>Trang bị sách vở, đồ dùng học tập</li>
               <li>Cải thiện bữa ăn học đường</li>
               <li>Nâng cấp cơ sở vật chất lớp học</li>
-            </ul>
+            </ul> */}
+            <p>{donation?.description}</p>
           </div>
         </div>
         <div className="space-y-6">

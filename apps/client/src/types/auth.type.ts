@@ -96,6 +96,7 @@ export type JwtTokens = {
 
 export type User = JwtTokens & {
   id: number
+  accountId: number
   username: string
   contact: string
   email: string

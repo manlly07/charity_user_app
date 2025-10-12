@@ -3,7 +3,7 @@ import CharityService from '@/services/charity.service'
 import { RootState } from '@/stores/store'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { Navigate } from 'react-router'
+import { Navigate, useSearchParams } from 'react-router'
 import useSWR from 'swr'
 
 export type CharityEventResponseList = {
@@ -29,10 +29,14 @@ export type CharityEventResponseList = {
 }
 
 const Home = () => {
+  const [searchParams] = useSearchParams()
+  const keyword = searchParams.get('s') || '' // đọc param ?s
   const { user } = useSelector((state: RootState) => state.auth)
   if (!user) return <Navigate to={'/login'} />
 
-  const { data, error } = useSWR('/events/charity', () => CharityService.getDashboard(user?.id))
+  const { data, error } = useSWR(['/events/charity', user?.id, keyword], () =>
+    CharityService.getDashboard(user.id, keyword)
+  )
 
   const charities = useMemo(() => {
     if (error || !data) return []

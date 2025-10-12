@@ -16,6 +16,7 @@ import { RootState } from '@/stores/store'
 import { charityFormSchema } from '@/types/charity.type'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { UploadIcon } from '@radix-ui/react-icons'
+import dayjs from 'dayjs'
 import { useForm } from 'react-hook-form'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
@@ -32,8 +33,8 @@ const CharitieCreate = () => {
     resolver: zodResolver(charityFormSchema),
     defaultValues: {
       charityName: '',
-      dateStart: new Date(),
-      dateEnd: new Date(),
+      dateStart: dayjs().add(1, 'hour').toDate(),
+      dateEnd: dayjs().add(2, 'hour').toDate(),
       destination: '',
       description: '',
       todo: '',

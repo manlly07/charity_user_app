@@ -97,11 +97,12 @@ export default class CharityService {
     }
   }
 
-  static async getDashboard(id: number) {
+  static async getDashboard(id: number, search?: string) {
     try {
       const res = await axiosInstance.get('/events/charity', {
         params: {
-          id
+          id,
+          ...(search ? { search } : {}) // chỉ thêm khi có search
         }
       })
       return res.data

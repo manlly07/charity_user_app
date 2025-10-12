@@ -78,12 +78,12 @@ const OrganizationDetail = () => {
         <div>
           <p className="text-xl font-semibold">Certificate</p>
           <div>
-            {!data?.certificate && (
+            {!data?.organizationCertificate && (
               <p className="text-sm text-text-secondary">No certificate available.</p>
             )}
-            {data?.certificate && (
+            {data?.organizationCertificate && (
               <img
-                src={data?.certificate}
+                src={data?.organizationCertificate}
                 alt={data?.organizationName}
                 className="w-ful h-20 rounded object-cover block "
               />
@@ -93,10 +93,12 @@ const OrganizationDetail = () => {
         <div>
           <p className="text-xl font-semibold">Logo</p>
           <div>
-            {!data?.logo && <p className="text-sm text-text-secondary">No logo available.</p>}
-            {data?.logo && (
+            {!data?.organizationLogo && (
+              <p className="text-sm text-text-secondary">No logo available.</p>
+            )}
+            {data?.organizationLogo && (
               <img
-                src={data?.logo}
+                src={data?.organizationLogo}
                 alt={data?.organizationName}
                 className="w-ful h-20 rounded object-cover block "
               />
