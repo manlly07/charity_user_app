@@ -1,4 +1,4 @@
-import { Banner2, Event1, Event2, Event3 } from '@/assets'
+import { Banner2, Event1 } from '@/assets'
 import { Button } from '@/components/ui/button'
 import CharityService from '@/services/charity.service'
 import { RootState } from '@/stores/store'
@@ -13,9 +13,9 @@ import {
 } from '@radix-ui/react-icons'
 import { Avatar, Badge, Progress } from '@radix-ui/themes'
 import dayjs from 'dayjs'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { useParams } from 'react-router'
+import { Navigate, useNavigate, useParams } from 'react-router'
 import useSWR from 'swr'
 import { CharityEventResponseList } from '../home'
 
@@ -39,17 +39,57 @@ const CharityDetail = () => {
   const { user } = useSelector((state: RootState) => state.auth)
   const { id } = useParams<{ id: string }>()
   const charityId = id ? parseInt(id, 10) : 0
+  const navigate = useNavigate()
+  if (!user) return <Navigate to={'/login'} />
 
   const { data, error, isLoading, mutate } = useSWR<CharityEventResponseList | null>(
     '/events/charity',
     () => CharityService.getCharityById(charityId, user?.id)
   )
 
+  const [joined, setJoined] = useState(false)
+
   const charity = useMemo(() => {
     if (error || !data) return null
+    setJoined(data.joined)
     return data
   }, [data, error])
 
+  const { data: simalar, error: errorSimilar } = useSWR(['/events/charity', user?.id], () =>
+    CharityService.getDashboard(user.id)
+  )
+
+  const eventSimilar = useMemo(() => {
+    if (errorSimilar || !simalar) return []
+    return simalar.filter((item: any) => item.id !== charityId).slice(0, 3)
+  }, [simalar, errorSimilar])
+
+  const formatEventDate = (dateStart?: string, dateEnd?: string) => {
+    if (!dateStart) return ''
+
+    const start = dayjs(dateStart)
+    const end = dateEnd ? dayjs(dateEnd) : null
+
+    if (!end) return start.format('MMM D, YYYY')
+    if (start.year() !== end.year())
+      return `${start.format('MMM D, YYYY')} - ${end.format('MMM D, YYYY')}`
+
+    return `${start.format('MMM D')} - ${end.format('MMM D, YYYY')}`
+  }
+
+  const handleJoin = async () => {
+    try {
+      if (joined) {
+        await CharityService.leaveProgram(charityId, user.id)
+        setJoined(false)
+      } else {
+        await CharityService.joinProgram(charityId, user.id)
+        setJoined(true)
+      }
+    } catch (err) {
+      console.error(err)
+    }
+  }
   return (
     <>
       <div className="relative">
@@ -128,14 +168,15 @@ const CharityDetail = () => {
           </div>
           <div className="flex items-center gap-8">
             <Button
+              onClick={handleJoin}
               className={
-                charity?.joined
+                joined
                   ? 'bg-red-500 hover:bg-red-600 px-6'
                   : 'bg-primary-custom-color hover:bg-primary-custom-color/85 px-6'
               }
               size={'lg'}
             >
-              {charity?.joined ? 'Leave Program' : 'Join us Volunteer'}
+              {joined ? 'Leave Program' : 'Join us Volunteer'}
             </Button>
             <HeartIcon width={24} height={24} />
             <Share1Icon width={24} height={24} />
@@ -145,10 +186,10 @@ const CharityDetail = () => {
           <div className="h-full col-span-1 p-6 space-y-4 bg-secondary-bg-color rounded">
             <p className="text-lg font-bold">Requirements</p>
             <div className="space-y-3 h-full">
-              {REQUIREMENTS.map((item) => (
+              {charity?.requirement.split(';').map((item) => (
                 <div className="flex items-center gap-2" key={item}>
                   <CheckCircledIcon className="text-primary-custom-color" width={20} height={20} />
-                  <span className="text-base text-text-secondary text-wrap">{item}</span>
+                  <span className="text-base text-text-secondary text-wrap max-w-3/4">{item}</span>
                 </div>
               ))}
             </div>
@@ -156,10 +197,10 @@ const CharityDetail = () => {
           <div className="h-full col-span-1 p-6 space-y-4 bg-secondary-bg-color rounded">
             <p className="text-lg font-bold">What You'll Do</p>
             <div className="space-y-3">
-              {WHATWILLIDO.map((item) => (
+              {charity?.todo.split(';').map((item) => (
                 <div className="flex items-center gap-2" key={item}>
                   <CheckCircledIcon className="text-primary-custom-color" width={20} height={20} />
-                  <span className="text-base text-text-secondary">{item}</span>
+                  <span className="text-base text-text-secondary text-wrap max-w-3/4">{item}</span>
                 </div>
               ))}
             </div>
@@ -167,17 +208,14 @@ const CharityDetail = () => {
           <div className="h-full col-span-1 p-6 space-y-4 bg-secondary-bg-color rounded">
             <p className="text-lg font-bold">About Us</p>
             <div className="space-y-3">
-              <p className="text-text-secondary text-base">
-                Green Earth Foundation is a non-profit organization dedicated to environmental
-                conservation and community development through sustainable practices and education.
+              <p className="text-text-secondary text-base text-wrap w-full">
+                {charity?.description}
               </p>
               <div className="flex items-center gap-2">
-                <PersonIcon className="text-custom-color" width={20} height={20} />
-                <span className="text-base text-text-secondary">Founded in 2010</span>
-              </div>
-              <div className="flex items-center gap-2">
                 <PaperPlaneIcon className="text-custom-color" width={20} height={20} />
-                <span className="text-base text-text-secondary">San Francisco, CA</span>
+                <span className="text-base text-text-secondary text-wrap max-w-3/4">
+                  {charity?.destination}
+                </span>
               </div>
               <div className="flex items-center gap-2">
                 <ClockIcon className="text-custom-color" width={20} height={20} />
@@ -189,54 +227,36 @@ const CharityDetail = () => {
         <div className="space-y-6">
           <p className="text-xl font-bold">Similar Events</p>
           <div className="grid grid-cols-3 gap-6">
-            <div className="col-span-1 space-y-4">
-              <div className="image w-full h-[200px] overflow-hidden rounded">
-                <img src={Event1} alt="event" className="w-full h-full object-cover" />
-              </div>
-              <div className="space-y-1">
-                <div className="text-base font-bold">Urban Forest Conservation</div>
-                <div className="text-text-custom-color flex gap-2 text-sm">
-                  <CalendarIcon width={16} height={16} />
-                  <span>Oct 1 - Nov 15, 2023</span>
+            {eventSimilar.length === 0 && <p className="text-base text-text-secondary">No data</p>}
+            {eventSimilar.map((item: CharityEventResponseList) => (
+              <div
+                className="col-span-1 space-y-4"
+                key={item.id}
+                onClick={() => navigate('/organize/charity/' + item.id)}
+              >
+                <div className="image w-full h-[200px] overflow-hidden rounded">
+                  <img
+                    src={item?.pic ?? Event1}
+                    alt="event"
+                    className="w-full h-full object-cover"
+                  />
                 </div>
-                <div className="text-primary-custom-color flex gap-2 text-sm">
-                  <PersonIcon width={16} height={16} />
-                  <span>15 spots left</span>
-                </div>
-              </div>
-            </div>
-            <div className="col-span-1 space-y-4">
-              <div className="image w-full h-[200px] overflow-hidden rounded">
-                <img src={Event2} alt="event" className="w-full h-full object-cover" />
-              </div>
-              <div className="space-y-1">
-                <div className="text-base font-bold">Community Food Bank</div>
-                <div className="text-text-custom-color flex gap-2 text-sm">
-                  <CalendarIcon width={16} height={16} />
-                  <span>Sep 20 - Oct 30, 2023</span>
-                </div>
-                <div className="text-primary-custom-color flex gap-2 text-sm">
-                  <PersonIcon width={16} height={16} />
-                  <span>15 spots left</span>
+                <div className="space-y-1">
+                  <div className="text-base font-bold">{item?.name}</div>
+                  <div className="text-text-custom-color flex gap-2 text-sm">
+                    <CalendarIcon width={16} height={16} />
+                    <span>{formatEventDate(charity?.dateStart, charity?.dateEnd)}</span>
+                  </div>
+                  <div className="text-primary-custom-color flex gap-2 text-sm">
+                    <PersonIcon width={16} height={16} />
+                    <span>
+                      {(item?.numVolunteerRequire ?? 0) - (item?.numVolunteerActual ?? 0)} spots
+                      left
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="col-span-1 space-y-4">
-              <div className="image w-full h-[200px] overflow-hidden rounded">
-                <img src={Event3} alt="event" className="w-full h-full object-cover" />
-              </div>
-              <div className="space-y-1">
-                <div className="text-base font-bold">Youth Mentorship Program</div>
-                <div className="text-text-custom-color flex gap-2 text-sm">
-                  <CalendarIcon width={16} height={16} />
-                  <span>Oct 5 - Nov 20, 2023</span>
-                </div>
-                <div className="text-primary-custom-color flex gap-2 text-sm">
-                  <PersonIcon width={16} height={16} />
-                  <span>20 spots left</span>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>

@@ -70,10 +70,11 @@ const TableDonations = ({ donations }: TableCharitiesProps) => {
         <Badge
           variant={'secondary'}
           className={cn('text-xs', {
-            'bg-green-500/10 text-green-500': row.getValue('eventStatus') === 'active',
-            'bg-blue-500/10 text-blue-500': row.getValue('eventStatus') === 'completed',
-            'bg-yellow-500/10 text-yellow-500': row.getValue('eventStatus') === 'upcoming',
-            'bg-red-500/10 text-red-500': row.getValue('eventStatus') === 'CLOSED'
+            'bg-green-500/10 text-green-500': row.getValue('eventStatus') === 'ACTIVE',
+            'bg-blue-500/10 text-blue-500': row.getValue('eventStatus') === 'COMPLETED',
+            'bg-yellow-500/10 text-yellow-500': row.getValue('eventStatus') === 'PENDING',
+            'bg-orange-500/10 text-orange-500': row.getValue('eventStatus') === 'CLOSED',
+            'bg-red-500/10 text-red-500': row.getValue('eventStatus') === 'INACTIVE'
           })}
         >
           {String(row.getValue('eventStatus')).charAt(0).toUpperCase() +

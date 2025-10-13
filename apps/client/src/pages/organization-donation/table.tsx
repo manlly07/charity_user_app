@@ -235,7 +235,7 @@ const TableDonations = ({ donations }: { donations: Donation[] }) => {
         return (
           <div className="flex items-center gap-2">
             <img
-              src={Banner1}
+              src={row.original.pic ?? Banner1}
               alt={row.original.title}
               className="w-14 h-14 rounded object-cover block "
             />
@@ -313,7 +313,7 @@ const TableDonations = ({ donations }: { donations: Donation[] }) => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => alert(`Editing campaign ${row.original.id}`)}
+            onClick={() => navigate(`/organization/donations/update/${row.original.id}`)}
           >
             <Pencil2Icon />
           </Button>

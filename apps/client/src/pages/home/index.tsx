@@ -15,6 +15,7 @@ export type CharityEventResponseList = {
   todo: string
   destination: string
   dateStart: string
+  dateEnd: string
   numVolunteerRequire: number
   numVolunteerActual: number
 

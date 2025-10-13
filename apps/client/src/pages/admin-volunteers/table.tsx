@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/table'
 import { VolunteerListResponse } from '@/hooks/useVolunteer'
 import { cn } from '@/lib/utils'
-import { EyeOpenIcon, Pencil2Icon } from '@radix-ui/react-icons'
+import { EyeOpenIcon } from '@radix-ui/react-icons'
 import {
   ColumnDef,
   flexRender,
@@ -78,7 +78,7 @@ const TableVolunteers = ({ volunteers }: TableCharitiesProps) => {
           colorClass = 'bg-green-500/10 text-green-500'
         } else {
           text = 'Inactive'
-          colorClass = 'bg-blue-500/10 text-gray-500'
+          colorClass = 'bg-orange-500/10 text-orange-500'
         }
 
         return (
@@ -100,13 +100,13 @@ const TableVolunteers = ({ volunteers }: TableCharitiesProps) => {
           >
             <EyeOpenIcon />
           </Button>
-          <Button
+          {/* <Button
             variant="ghost"
             size="icon"
             onClick={() => alert(`Editing campaign ${row.original.id}`)}
           >
             <Pencil2Icon />
-          </Button>
+          </Button> */}
         </div>
       )
     }

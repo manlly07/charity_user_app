@@ -216,7 +216,7 @@ const CharityDetail = () => {
                       {new Intl.NumberFormat('vi-VN', {
                         style: 'currency',
                         currency: 'VND'
-                      }).format(parseFloat(item?.totalDonated as string) || 0)}{' '}
+                      }).format(parseFloat(item?.donateAmount as string) || 0)}{' '}
                     </TableCell>
                     <TableCell className="font-normal text-text-secondary">
                       {item?.note || 'Không có lời nhắn'}

@@ -72,6 +72,39 @@ const OrganizationDetail = () => {
             <p className="text-sm text-gray-500">Phone Number</p>
             <p className="text-base font-medium">{data?.volunteerContact || '-'}</p>
           </div>
+          {data?.requestType === 'CHARITY_REGISTRATION' && (
+            <>
+              <div className="space-y-2">
+                <p className="text-sm text-gray-500">Program Name</p>
+                <p className="text-base font-medium">{data?.charityEventName || '-'}</p>
+              </div>
+              <div className="space-y-2">
+                <p className="text-sm text-gray-500">Localtion</p>
+                <p className="text-base font-medium">{data?.destination || '-'}</p>
+              </div>
+              <div className="space-y-2">
+                <p className="text-sm text-gray-500">Number of Volunteer Need</p>
+                <p className="text-base font-medium">{data?.numberOfVolunteers || '-'}</p>
+              </div>
+            </>
+          )}
+          {data?.requestType === 'DONATION_REGISTRATION' && (
+            <>
+              <div className="space-y-2">
+                <p className="text-sm text-gray-500">Money need</p>
+                <p className="text-base font-medium">
+                  {new Intl.NumberFormat('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND'
+                  }).format(parseFloat(data?.moneyNeed as string) || 0)}
+                </p>
+              </div>
+              <div className="space-y-2">
+                <p className="text-sm text-gray-500">Program Name</p>
+                <p className="text-base font-medium">{data?.donationEventName || '-'}</p>
+              </div>
+            </>
+          )}
         </div>
       </div>
       <div className="space-y-6">
@@ -106,12 +139,48 @@ const OrganizationDetail = () => {
           </div>
         </div>
       </div>
-      <div className="space-y-6">
-        <p className="text-xl font-semibold">Reason for Request</p>
-        <div className="bg-gray-50 p-4 rounded">
-          <p className="text-base font-medium">{data?.denyReason || '-'}</p>
-        </div>
-      </div>
+      {data?.requestType === 'CHARITY_REGISTRATION' && (
+        <>
+          <div className="space-y-6">
+            <p className="text-xl font-semibold">Description</p>
+            <div className="bg-gray-50 p-4 rounded">
+              <p className="text-base font-medium">{data?.charityDescription || '-'}</p>
+            </div>
+          </div>
+          <div className="space-y-6">
+            <p className="text-xl font-semibold">To do</p>
+            <div className="bg-gray-50 p-4 rounded">
+              <p className="text-base font-medium">{data?.charityToDo || '-'}</p>
+            </div>
+          </div>
+          <div className="space-y-6">
+            <p className="text-xl font-semibold">Require</p>
+            <div className="bg-gray-50 p-4 rounded">
+              <p className="text-base font-medium">{data?.charityRequire || '-'}</p>
+            </div>
+          </div>
+        </>
+      )}
+      {data?.requestType === 'DONATION_REGISTRATION' && (
+        <>
+          <div className="space-y-6">
+            <p className="text-xl font-semibold">Description</p>
+            <div className="bg-gray-50 p-4 rounded">
+              <p className="text-base font-medium">{data?.donationDescription || '-'}</p>
+            </div>
+          </div>
+        </>
+      )}
+      {(data?.requestType === 'CHARITY_EDITION' || data?.requestType === 'DONATION_EDITION') && (
+        <>
+          <div className="space-y-6">
+            <p className="text-xl font-semibold">Reason for Request</p>
+            <div className="bg-gray-50 p-4 rounded">
+              <p className="text-base font-medium">{data?.editReason || '-'}</p>
+            </div>
+          </div>
+        </>
+      )}
       <div className="flex items-center gap-6">
         <Button
           className="bg-primary-custom-color"
