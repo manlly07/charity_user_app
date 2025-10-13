@@ -156,9 +156,19 @@ export default class CharityService {
   }
 
   static async update(id: string, data: CharityEventRequest) {
-    const res = await axiosInstance.put(`/events/charity/${id}`, {
-      data
-    })
+    const res = await axiosInstance.put(
+      `/events/charity/${id}`,
+      {
+        ...data,
+        dateStart: dayjs(data.dateStart).format('YYYY-MM-DDTHH:mm:ss'),
+        dateEnd: dayjs(data.dateEnd).format('YYYY-MM-DDTHH:mm:ss')
+      },
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+    )
     return res.data
   }
 }
