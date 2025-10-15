@@ -1,6 +1,6 @@
 import { ROLE } from '@/enum'
 import axiosInstance from '@/lib/api'
-import { LoginData, RegisterData } from '@/types/auth.type'
+import { ForgotPasswordData, LoginData, RegisterData } from '@/types/auth.type'
 
 export default class AuthService {
   static async login(
@@ -37,6 +37,22 @@ export default class AuthService {
         ...dto,
         role: ROLE.ROLE_USER
       })
+      return res.data
+    } catch (error) {
+      return rejectWithValue(error)
+    }
+  }
+
+  static async reset(
+    dto: ForgotPasswordData,
+    {
+      rejectWithValue
+    }: {
+      rejectWithValue: any
+    }
+  ) {
+    try {
+      const res = await axiosInstance.post('/auth/reset-password', dto)
       return res.data
     } catch (error) {
       return rejectWithValue(error)

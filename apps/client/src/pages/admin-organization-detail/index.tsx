@@ -127,16 +127,19 @@ const OrganizationDetail = () => {
                   <Badge
                     variant={'secondary'}
                     className={cn('text-xs', {
-                      'bg-green-500/10 text-green-500': charity?.eventStatus === 'active',
-                      'bg-blue-500/10 text-blue-500': charity?.eventStatus === 'completed',
-                      'bg-yellow-500/10 text-yellow-500': charity?.eventStatus === 'upcoming',
-                      'bg-red-500/10 text-red-500': charity?.eventStatus === 'cancelled'
+                      'bg-green-500/10 text-green-500': charity?.eventStatus === 'ACTIVE',
+                      'bg-blue-500/10 text-blue-500': charity?.eventStatus === 'COMPLETED',
+                      'bg-yellow-500/10 text-yellow-500': charity?.eventStatus === 'PENDING',
+                      'bg-red-500/10 text-red-500': charity?.eventStatus === 'CANCELLED'
                     })}
                   >
                     {String(charity?.eventStatus).charAt(0).toUpperCase() +
                       String(charity?.eventStatus).slice(1)}
                   </Badge>
-                  <span className="text-sm text-primary-custom-color cursor-pointer">
+                  <span
+                    className="text-sm text-primary-custom-color cursor-pointer"
+                    onClick={() => navigate('/admin/charities/' + charity?.id)}
+                  >
                     View Details
                   </span>
                 </div>
@@ -169,16 +172,19 @@ const OrganizationDetail = () => {
                   <Badge
                     variant={'secondary'}
                     className={cn('text-xs', {
-                      'bg-green-500/10 text-green-500': event?.eventStatus === 'active',
-                      'bg-blue-500/10 text-blue-500': event?.eventStatus === 'completed',
-                      'bg-yellow-500/10 text-yellow-500': event?.eventStatus === 'upcoming',
-                      'bg-red-500/10 text-red-500': event?.eventStatus === 'cancelled'
+                      'bg-green-500/10 text-green-500': event?.eventStatus === 'ACTIVE',
+                      'bg-blue-500/10 text-blue-500': event?.eventStatus === 'COMPLETED',
+                      'bg-yellow-500/10 text-yellow-500': event?.eventStatus === 'PENDING',
+                      'bg-red-500/10 text-red-500': event?.eventStatus === 'CANCELLED'
                     })}
                   >
                     {String(event?.eventStatus).charAt(0).toUpperCase() +
                       String(event?.eventStatus).slice(1)}
                   </Badge>
-                  <span className="text-sm text-primary-custom-color cursor-pointer">
+                  <span
+                    className="text-sm text-primary-custom-color cursor-pointer"
+                    onClick={() => navigate('/admin/donations/' + event?.id)}
+                  >
                     View Details
                   </span>
                 </div>

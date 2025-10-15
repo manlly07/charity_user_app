@@ -2,7 +2,6 @@ import { Badge } from '@/components/ui/badge'
 import { RequestStatus } from '@/enum'
 import useOrganization from '@/hooks/useOrganization'
 import { cn } from '@/lib/utils'
-import { RequestService } from '@/services'
 import { RootState } from '@/stores/store'
 import { DownloadIcon, FileTextIcon } from '@radix-ui/react-icons'
 import { ClockIcon } from 'lucide-react'
@@ -41,12 +40,9 @@ const RequestOrganization = () => {
     if (!organization) return RequestStatus.PENDING.toUpperCase()
     return organization?.status
   }, [organization])
-  console.log(organization)
+
   return (
     <div className="max-w-[1440px] w-full m-auto px-12 py-20 space-y-8">
-      <button onClick={() => RequestService.updateStatus(user!.id, RequestStatus.APPROVED)}>
-        Submit
-      </button>
       <p className="text-3xl font-bold">Application Status</p>
       <div className="grid grid-cols-[1fr_470px] gap-8">
         <div className="border border-border rounded-lg p-8 space-y-8">
@@ -100,9 +96,19 @@ const RequestOrganization = () => {
                         <p className="text-sm text-[#6B7280]">Organization_Certificate.pdf</p>
                       </div>
                     </div>
-                    <div>
+
+                    {/* 👇 Thêm sự kiện onClick để tải file */}
+                    <button
+                      onClick={() => {
+                        const link = document.createElement('a')
+                        link.href = organization.certificate
+                        link.download = 'Organization_Certificate.pdf'
+                        link.click()
+                      }}
+                      className="hover:opacity-80 transition"
+                    >
                       <DownloadIcon width={20} height={20} className="text-primary-custom-color" />
-                    </div>
+                    </button>
                   </div>
                 </>
               )}

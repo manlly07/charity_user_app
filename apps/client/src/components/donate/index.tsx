@@ -27,33 +27,45 @@ const DonateItem = ({ donation }: { donation: Donation }) => {
           </span>
         </div>
         <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="font-medium text-sm">
-              {new Intl.NumberFormat('vi-VN', {
-                style: 'currency',
-                currency: 'VND'
-              }).format(
-                parseFloat(donation?.totalDonated as string) ||
-                  parseFloat(donation?.actualAmount as string) ||
-                  0
-              )}{' '}
-              raised
-            </span>
-            <span className="font-normal text-sm">
-              of{' '}
-              {new Intl.NumberFormat('vi-VN', {
-                style: 'currency',
-                currency: 'VND'
-              }).format(
-                parseFloat(donation?.moneyNeed as string) ||
-                  parseFloat(donation?.targetAmount as string) ||
-                  0
-              )}
-            </span>
-          </div>
-          <div>
-            <Progress value={75} variant="soft" radius="full" color="green" />
-          </div>
+          {(() => {
+            const raised =
+              parseFloat(donation?.totalDonated as string) ||
+              parseFloat(donation?.actualAmount as string) ||
+              0
+
+            const target =
+              parseFloat(donation?.moneyNeed as string) ||
+              parseFloat(donation?.targetAmount as string) ||
+              0
+
+            const percent = target > 0 ? Math.min((raised / target) * 100, 100) : 0
+
+            return (
+              <>
+                <div className="flex items-center justify-between">
+                  <span className="font-medium text-sm">
+                    {new Intl.NumberFormat('vi-VN', {
+                      style: 'currency',
+                      currency: 'VND'
+                    }).format(raised)}{' '}
+                    raised
+                  </span>
+
+                  <span className="font-normal text-sm">
+                    of{' '}
+                    {new Intl.NumberFormat('vi-VN', {
+                      style: 'currency',
+                      currency: 'VND'
+                    }).format(target)}
+                  </span>
+                </div>
+
+                <div>
+                  <Progress value={percent} variant="soft" radius="full" color="green" />
+                </div>
+              </>
+            )
+          })()}
         </div>
         <Button
           className="w-full bg-primary-custom-color hover:bg-primary-custom-color"

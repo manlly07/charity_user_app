@@ -2,24 +2,13 @@ import { Event4, Event5, Event6, Event7 } from '@/assets'
 import SearchInput from '@/components/search'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Calendar } from '@/components/ui/calendar'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select'
 import axiosInstance from '@/lib/api'
 import { cn } from '@/lib/utils'
 import { RootState } from '@/stores/store'
-import { ChevronDownIcon } from '@radix-ui/themes'
 import dayjs from 'dayjs'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Navigate } from 'react-router'
+import { Navigate, useNavigate, useSearchParams } from 'react-router'
 import useSWR from 'swr'
 
 const EVENTS = [
@@ -54,13 +43,30 @@ const EVENTS = [
 ]
 
 const CharityHistory = () => {
-  const [date, _setDate] = useState<Date | undefined>(new Date(2025, 5, 12))
-  const [openFrom, setOpenFrom] = useState(false)
-  const [dateFrom, _setDateFrom] = useState<Date | undefined>(undefined)
   const { user } = useSelector((state: RootState) => state.auth)
   if (!user?.id) return <Navigate to={'/login'} />
-  const { data, error } = useSWR('/charity/history', async () => {
-    const res = await axiosInstance.get(`/events/charity/volunteer/${user?.id}/history`)
+
+  const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const [keyword, setKeyword] = useState(searchParams.get('s') || '')
+
+  useEffect(() => {
+    if (keyword.trim() === '') {
+      navigate('.', { replace: true }) // xoá query param
+    }
+  }, [keyword, navigate])
+
+  const handleSearch = () => {
+    if (!keyword.trim()) return
+    navigate(`?s=${encodeURIComponent(keyword.trim())}`)
+  }
+
+  const { data, error } = useSWR(['/charity/history', keyword], async () => {
+    const res = await axiosInstance.get(`/events/charity/volunteer/${user?.id}/history`, {
+      params: {
+        ...(keyword.trim() ? { search: keyword.trim() } : {})
+      }
+    })
     return res.data
   })
 
@@ -81,8 +87,13 @@ const CharityHistory = () => {
       </div>
       <div className="shadow rounded-lg p-6 space-y-4">
         <div className="flex items-center [&>*]:flex-1 gap-4">
-          <SearchInput placeholder="Search by Program Name" />
-          <Popover open={openFrom} onOpenChange={setOpenFrom}>
+          <SearchInput
+            placeholder="Search by Program Name"
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+          />
+          {/* <Popover open={openFrom} onOpenChange={setOpenFrom}>
             <PopoverTrigger className="w-full" asChild>
               <div>
                 <Button variant="outline" id="date" className="w-full justify-between font-normal">
@@ -94,17 +105,7 @@ const CharityHistory = () => {
             <PopoverContent className="w-full overflow-hidden p-0" align="start">
               <Calendar mode="range" defaultMonth={date} className="rounded-lg border shadow-sm" />
             </PopoverContent>
-          </Popover>
-          <Select>
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select Organization" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem value="apple">Apple</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+          </Popover> */}
         </div>
         <Button className="bg-primary-custom-color hover:bg-primary-custom-color">
           <span>Search</span>

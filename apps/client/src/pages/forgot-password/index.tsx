@@ -9,9 +9,9 @@ import {
   FormLabel,
   FormMessage
 } from '@/components/ui/form'
-import { login } from '@/stores/slices/auth.slice'
+import { reset } from '@/stores/slices/auth.slice'
 import { AppDispatch } from '@/stores/store'
-import { LoginData } from '@/types/auth.type'
+import { ForgotPasswordData } from '@/types/auth.type'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
@@ -19,29 +19,24 @@ import { Link, useNavigate } from 'react-router'
 import { toast } from 'react-toastify'
 import { z } from 'zod'
 const FormSchema = z.object({
-  email: z.string().trim().email().max(255, 'Email must be at most 255 characters long'),
-  password: z
-    .string()
-    .trim()
-    .min(6, 'Password must be at least 6 characters long')
-    .max(255, 'Password must be at most 255 characters long')
+  email: z.string().trim().email().max(255, 'Email must be at most 255 characters long')
 })
 
 const Login = () => {
-  const form = useForm<LoginData>({
+  const form = useForm<ForgotPasswordData>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      email: '',
-      password: ''
+      email: ''
     }
   })
 
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
 
-  const onSubmit = async (data: LoginData) => {
-    const res = await dispatch(login(data))
+  const onSubmit = async (data: ForgotPasswordData) => {
+    const res = await dispatch(reset(data))
     if (res.meta.requestStatus === 'fulfilled') {
+      toast.success('Please check your email to reset your password')
       return navigate('/')
     }
 
@@ -81,36 +76,12 @@ const Login = () => {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <InputCustom
-                        type="password"
-                        placeholder="Enter your password"
-                        {...field}
-                        autoComplete="current-password"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div
-                onClick={() => navigate('/forgot-password')}
-                className="text-xs text-right hover:text-blue-500 underline cursor-pointer"
-              >
-                Forgot password?
-              </div>
               <Button
                 type="submit"
                 size={'lg'}
                 className="bg-primary-custom-color hover:bg-primary-custom-color/80 w-full shadow-lg shadow-primary-custom-color/20"
               >
-                Login
+                Send Reset
               </Button>
             </form>
           </Form>

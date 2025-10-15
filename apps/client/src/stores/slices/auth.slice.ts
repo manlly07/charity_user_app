@@ -16,6 +16,7 @@ const initialState: TAuthState = {
 }
 
 export const login = createAsyncThunk('LOGIN', AuthService.login)
+export const reset = createAsyncThunk('RESET', AuthService.reset)
 export const register = createAsyncThunk('REGISTER', AuthService.register)
 export const authenticated = createAsyncThunk('AUTHENTICATED', AuthService.authenticated)
 const getUser = (): User | null => {
@@ -62,6 +63,9 @@ export const authSlice = createSlice({
     })
     builder.addCase(authenticated.fulfilled, (state, action) => {
       state.user = action.payload
+    })
+    builder.addCase(reset.fulfilled, (state) => {
+      state.isLoading = false
     })
   }
 })

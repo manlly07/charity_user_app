@@ -171,7 +171,7 @@ const OrganizationDetail = () => {
           </div>
         </>
       )}
-      {(data?.requestType === 'CHARITY_EDITION' || data?.requestType === 'DONATION_EDITION') && (
+      {/* {(data?.requestType === 'CHARITY_EDITION' || data?.requestType === 'DONATION_EDITION') && (
         <>
           <div className="space-y-6">
             <p className="text-xl font-semibold">Reason for Request</p>
@@ -180,7 +180,7 @@ const OrganizationDetail = () => {
             </div>
           </div>
         </>
-      )}
+      )} */}
       <div className="flex items-center gap-6">
         <Button
           className="bg-primary-custom-color"

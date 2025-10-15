@@ -2,13 +2,7 @@ import SearchInput from '@/components/search'
 import { Button } from '@/components/ui/button'
 import CharityService from '@/services/charity.service'
 import { RootState } from '@/stores/store'
-import {
-  CheckCircledIcon,
-  ClockIcon,
-  EnvelopeClosedIcon,
-  PersonIcon,
-  RocketIcon
-} from '@radix-ui/react-icons'
+import { CheckCircledIcon, ClockIcon, PersonIcon, RocketIcon } from '@radix-ui/react-icons'
 import dayjs from 'dayjs'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
@@ -75,10 +69,6 @@ const CharityDetail = () => {
           >
             <CheckCircledIcon />
             <span>Check in</span>
-          </Button>
-          <Button className="bg-primary-custom-color hover:bg-primary-custom-color">
-            <EnvelopeClosedIcon />
-            <span>Sent Notification to Volunteer</span>
           </Button>
         </div>
       </div>

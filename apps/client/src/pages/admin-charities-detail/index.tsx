@@ -11,12 +11,13 @@ const Volunteers = () => {
   const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
 
-  const { data } = useSWR('/admin/charities/' + id, () =>
+  const { data, mutate } = useSWR('/admin/charities/' + id, () =>
     CharitiesAdminService.getCharitiesById(id!)
   )
 
   const handleUpdateDonation = async (data: { eventStatus: EEventStatus }) => {
     await CharitiesAdminService.updateCharityEventStatus(id!, data)
+    mutate()
   }
 
   return (
@@ -88,30 +89,49 @@ const Volunteers = () => {
       <div className="space-y-6">
         <TableVolunteer participants={data?.participants ?? []} />
       </div>
-      <Button
-        className="text-red-400 border-red-200 px-6"
-        variant={'outline'}
-        size={'sm'}
-        onClick={() =>
-          handleUpdateDonation({
-            eventStatus: EEventStatus.CLOSED
-          })
-        }
-      >
-        Stop This Event
-      </Button>
-      <Button
-        className="ml-4 text-green-400 border-green-200 px-6"
-        variant={'outline'}
-        size={'sm'}
-        onClick={() =>
-          handleUpdateDonation({
-            eventStatus: EEventStatus.ACTIVE
-          })
-        }
-      >
-        Accept This Event
-      </Button>
+      {data?.eventStatus === EEventStatus.ACTIVE && (
+        <Button
+          className="text-red-400 border-red-200 px-6"
+          variant={'outline'}
+          size={'sm'}
+          onClick={() =>
+            handleUpdateDonation({
+              eventStatus: EEventStatus.CLOSED
+            })
+          }
+        >
+          Stop This Event
+        </Button>
+      )}
+
+      {data?.eventStatus === EEventStatus.CLOSED && (
+        <Button
+          className="text-green-400 border-green-200 px-6"
+          variant={'outline'}
+          size={'sm'}
+          onClick={() =>
+            handleUpdateDonation({
+              eventStatus: EEventStatus.ACTIVE
+            })
+          }
+        >
+          Active This Event
+        </Button>
+      )}
+      {data?.eventStatus === EEventStatus.PENDING && (
+        <Button
+          className="ml-4 text-green-400 border-green-200 px-6"
+          variant={'outline'}
+          size={'sm'}
+          onClick={() =>
+            handleUpdateDonation({
+              eventStatus: EEventStatus.ACTIVE
+            })
+          }
+        >
+          Accept This Event
+        </Button>
+      )}
     </div>
   )
 }

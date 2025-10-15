@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import useSWR from 'swr'
 
 export enum EEventStatus {
+  PENDING = 'PENDING',
   UPCOMING = 'upcoming',
   ONGOING = 'ONGOING',
   COMPLETED = 'COMPLETED',

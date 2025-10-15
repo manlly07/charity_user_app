@@ -1,4 +1,4 @@
-import { DonateItem, OrganizeFollow, UpcomingEvent } from '@/components'
+import { DonateItem, OrganizeFollow } from '@/components'
 import DonationService from '@/services/donation.service'
 import { useMemo } from 'react'
 import useSWR from 'swr'
@@ -31,11 +31,11 @@ const Donate = (_props: Props) => {
             ))}
           </div>
         </div>
-        <div className="hidden lg:block col-span-1">
+        {/* <div className="hidden lg:block col-span-1">
           <div className="sticky top-20">
             <UpcomingEvent />
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   )

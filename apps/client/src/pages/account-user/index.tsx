@@ -1,12 +1,6 @@
 import DashboadService from '@/services/dashboard.service'
 import { RootState } from '@/stores/store'
-import {
-  BackpackIcon,
-  CheckCircledIcon,
-  ClockIcon,
-  HeartIcon,
-  StarIcon
-} from '@radix-ui/react-icons'
+import { BackpackIcon, ClockIcon } from '@radix-ui/react-icons'
 import { useSelector } from 'react-redux'
 import useSWR from 'swr'
 
@@ -42,7 +36,7 @@ const Account = () => {
           <p className="text-base font-medium">{user?.email}</p>
         </div>
       </div>
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-2 gap-6">
         <div className="p-6 shadow rounded-lg flex items-center justify-between">
           <div className="space-y-1">
             <p className="text-sm text-text-secondary">Total Donations</p>
@@ -66,17 +60,8 @@ const Account = () => {
             <ClockIcon width={16} height={16} />
           </div>
         </div>
-        <div className="p-6 shadow rounded-lg flex items-center justify-between">
-          <div className="space-y-1">
-            <p className="text-sm text-text-secondary">Active Projects</p>
-            <p className="text-2xl font-semibold">{info?.charityCreatedCount} projects</p>
-          </div>
-          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-custom-color/10 text-primary-custom-color">
-            <HeartIcon width={16} height={16} />
-          </div>
-        </div>
       </div>
-      <div className="space-y-6">
+      {/* <div className="space-y-6">
         <div className="text-xl font-semibold">Recent Activity</div>
         <div className="[&>div]:border-b [&>div]:border-border [&>div]:p-4 shadow rounded-lg">
           <div className="flex items-center gap-4">
@@ -128,7 +113,7 @@ const Account = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   )
 }

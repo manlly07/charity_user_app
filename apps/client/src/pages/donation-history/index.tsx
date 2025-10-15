@@ -2,6 +2,7 @@ import SearchInput from '@/components/search'
 import { Button } from '@/components/ui/button'
 import axiosInstance from '@/lib/api'
 import { RootState } from '@/stores/store'
+import dayjs from 'dayjs'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { Navigate } from 'react-router'
@@ -35,15 +36,22 @@ const DonationHistory = () => {
         </Button>
       </div>
       <div className="space-y-4">
-        {EVENTS.map(() => (
+        {EVENTS.map((donation: any) => (
           <div className="rounded-lg overflow-hidden shadow flex justify-between">
             <div className="p-6 space-y-1">
-              <p className="text-lg font-medium">Clean Water Initiative</p>
-              <p className="text-base text-text-secondary">Global Water Foundation</p>
+              <p className="text-lg font-medium">{donation?.donationEventTitle}</p>
+              <p className="text-base text-text-secondary">{donation?.organizationName}</p>
             </div>
             <div className="p-6 space-y-1 text-right">
-              <p className="text-lg font-medium text-primary-custom-color">$250.00</p>
-              <p className="text-base text-text-secondary">April 15, 2024</p>
+              <p className="text-lg font-medium text-primary-custom-color">
+                {new Intl.NumberFormat('vi-VN', {
+                  style: 'currency',
+                  currency: 'VND'
+                }).format(donation?.donateAmount)}
+              </p>
+              <p className="text-base text-text-secondary">
+                {dayjs(donation?.donationCreatedAt).format('MMMM DD, YYYY')}
+              </p>
             </div>
           </div>
         ))}

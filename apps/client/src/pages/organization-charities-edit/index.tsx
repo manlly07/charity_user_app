@@ -97,7 +97,7 @@ const CharitieCreate = () => {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-3xl font-bold">Edit New Charity</p>
+          <p className="text-3xl font-bold">Edit a Charity</p>
           <p className="text-base text-text-custom-color">
             Enter the necessary details to update a charity project.
           </p>
