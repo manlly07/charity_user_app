@@ -88,6 +88,7 @@ const Organizes = (_props: Props) => {
           <div className="space-y-4">
             <p className="text-[32px] font-bold p-0">{data?.organizationName}</p>
             <p className="text-base text-[#4B5563]">Hosted by {data?.owner}</p>
+            <p className="text-base text-[#4B5563]">{data?.reason}</p>
             <p className="text-lg text-[#4B5563] line-clamp-1">{data?.description}</p>
           </div>
         </div>

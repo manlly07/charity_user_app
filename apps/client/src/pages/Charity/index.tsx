@@ -2,14 +2,7 @@ import { Banner2, Event1 } from '@/assets'
 import { Button } from '@/components/ui/button'
 import CharityService from '@/services/charity.service'
 import { RootState } from '@/stores/store'
-import {
-  CalendarIcon,
-  CheckCircledIcon,
-  HeartIcon,
-  PaperPlaneIcon,
-  PersonIcon,
-  Share1Icon
-} from '@radix-ui/react-icons'
+import { CalendarIcon, CheckCircledIcon, PaperPlaneIcon, PersonIcon } from '@radix-ui/react-icons'
 import { Avatar, Badge, Progress } from '@radix-ui/themes'
 import dayjs from 'dayjs'
 import { useMemo, useState } from 'react'
@@ -37,7 +30,7 @@ const CharityDetail = () => {
     return data
   }, [data, error])
 
-  const { data: simalar, error: errorSimilar } = useSWR(['/events/charity', user?.id], () =>
+  const { data: simalar, error: errorSimilar } = useSWR(['/events/charity/' + id, id], () =>
     CharityService.getDashboard(user.id)
   )
 
@@ -174,8 +167,6 @@ const CharityDetail = () => {
             >
               {joined ? 'Leave Program' : 'Join us Volunteer'}
             </Button>
-            <HeartIcon width={24} height={24} />
-            <Share1Icon width={24} height={24} />
           </div>
         </div>
         <div className="grid grid-cols-3 gap-8">
@@ -225,10 +216,11 @@ const CharityDetail = () => {
           <div className="grid grid-cols-3 gap-6">
             {eventSimilar.length === 0 && <p className="text-base text-text-secondary">No data</p>}
             {eventSimilar.map((item: CharityEventResponseList) => (
-              <div
+              <a
+                href={'/organize/charity/' + item.id}
                 className="col-span-1 space-y-4"
                 key={item.id}
-                onClick={() => navigate('/organize/charity/' + item.id)}
+                // onClick={() => window.location.href = '/organize/charity/' + item.id}
               >
                 <div className="image w-full h-[200px] overflow-hidden rounded">
                   <img
@@ -251,7 +243,7 @@ const CharityDetail = () => {
                     </span>
                   </div>
                 </div>
-              </div>
+              </a>
             ))}
           </div>
         </div>

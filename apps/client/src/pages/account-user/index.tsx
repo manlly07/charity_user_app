@@ -54,7 +54,7 @@ const Account = () => {
         <div className="p-6 shadow rounded-lg flex items-center justify-between">
           <div className="space-y-1">
             <p className="text-sm text-text-secondary">Total Event</p>
-            <p className="text-2xl font-semibold">{info?.charityJoinedCount} events</p>
+            <p className="text-2xl font-semibold">{info?.charityCreatedCount} events</p>
           </div>
           <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-custom-color/10 text-primary-custom-color">
             <ClockIcon width={16} height={16} />

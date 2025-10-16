@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils'
-import { BackpackIcon, ExitIcon, GearIcon, HeartIcon, HomeIcon } from '@radix-ui/react-icons'
+import { BackpackIcon, ExitIcon, HeartIcon, HomeIcon } from '@radix-ui/react-icons'
 import { MenuIcon, UserIcon } from 'lucide-react'
 import { Link, useLocation } from 'react-router'
 
@@ -33,11 +33,6 @@ const SIDEBAR = [
     name: 'Request',
     icon: <BackpackIcon width={20} height={20} />,
     path: '/admin/requests'
-  },
-  {
-    name: 'Settings',
-    icon: <GearIcon width={20} height={20} />,
-    path: '/admin/settings'
   },
   {
     name: 'Log out',

@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils'
-import { BackpackIcon, ExitIcon, GearIcon, HeartIcon, HomeIcon } from '@radix-ui/react-icons'
+import { BackpackIcon, ExitIcon, HeartIcon, HomeIcon } from '@radix-ui/react-icons'
 import { Link, useLocation } from 'react-router'
 
 const SIDEBAR = [
@@ -17,11 +17,6 @@ const SIDEBAR = [
     name: 'Donation List',
     icon: <BackpackIcon width={20} height={20} />,
     path: '/organization/donations'
-  },
-  {
-    name: 'Settings',
-    icon: <GearIcon width={20} height={20} />,
-    path: '/organization/settings'
   },
   {
     name: 'Log out',
