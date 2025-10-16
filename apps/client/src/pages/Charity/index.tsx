@@ -170,6 +170,7 @@ const CharityDetail = () => {
                   : 'bg-primary-custom-color hover:bg-primary-custom-color/85 px-6'
               }
               size={'lg'}
+              disabled={charity?.status !== 'ACTIVE'}
             >
               {joined ? 'Leave Program' : 'Join us Volunteer'}
             </Button>
