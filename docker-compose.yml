@@ -5,7 +5,7 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
-    container_name: pi-admin-app
+    container_name: charity-app-frontend
     restart: always
     environment:
       PUBLIC_API: ${PUBLIC_API}

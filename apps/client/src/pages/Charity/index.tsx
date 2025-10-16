@@ -101,8 +101,21 @@ const CharityDetail = () => {
       <div className="max-w-[1200px] w-full m-auto py-12 px-8 space-y-12">
         <div className="space-y-6">
           <div className="flex items-center gap-6">
-            <Badge color="green" radius="full">
-              Active Event
+            <Badge
+              color={
+                charity?.status === 'ACTIVE'
+                  ? 'green'
+                  : charity?.status === 'CLOSED'
+                    ? 'orange'
+                    : 'red'
+              }
+              radius="full"
+            >
+              {charity?.status === 'ACTIVE'
+                ? 'Active Event'
+                : charity?.status === 'CLOSED'
+                  ? 'Closed Event'
+                  : 'Inactive Event'}
             </Badge>
             <div className="flex items-center gap-1.5 text-text-secondary">
               <CalendarIcon />

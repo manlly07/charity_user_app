@@ -18,7 +18,7 @@ export type CharityEventResponseList = {
   dateEnd: string
   numVolunteerRequire: number
   numVolunteerActual: number
-
+  status: 'ACTIVE' | 'INACTIVE' | 'CLOSED'
   organization: {
     id: number
     name: string
