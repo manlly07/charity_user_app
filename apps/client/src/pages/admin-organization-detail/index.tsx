@@ -1,5 +1,4 @@
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { cn } from '@/lib/utils'
 import OrganizationService from '@/services/organization.service'
@@ -36,7 +35,7 @@ const OrganizationDetail = () => {
           Back
         </div>
         <div className="text-2xl font-bold">Organization Detail</div>
-        <div className="flex items-center gap-2">
+        {/* <div className="flex items-center gap-2">
           <Button
             className="text-red-400 border-red-200 px-6"
             variant={'outline'}
@@ -45,7 +44,7 @@ const OrganizationDetail = () => {
           >
             Delete
           </Button>
-        </div>
+        </div> */}
       </div>
       <div className="space-y-6">
         <p className="text-xl font-semibold">Basic Information</p>

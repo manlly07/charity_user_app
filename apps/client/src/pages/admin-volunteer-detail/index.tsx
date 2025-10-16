@@ -43,7 +43,7 @@ const Volunteers = () => {
           >
             Edit
           </Button> */}
-          {!data?.banned ? (
+          {/* {!data?.banned ? (
             <Button
               className="text-black border-gray-200 px-6"
               variant={'outline'}
@@ -61,7 +61,7 @@ const Volunteers = () => {
             >
               Allow
             </Button>
-          )}
+          )} */}
           {data?.active ? (
             <Button
               className="text-red-400 border-red-200 px-6"

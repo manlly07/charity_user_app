@@ -42,9 +42,9 @@ const TableCharities = ({ charities }: TableCharitiesProps) => {
       cell: ({ row }) => <span>{row.getValue('id') ? `ORG${row.getValue('id')}` : '-'}</span>
     },
     {
-      accessorKey: 'organizationName',
+      accessorKey: 'charityName',
       header: 'Charity Name',
-      cell: ({ row }) => row.getValue('organizationName') || '-'
+      cell: ({ row }) => row.getValue('charityName') || '-'
     },
     {
       accessorKey: 'organizationName',
