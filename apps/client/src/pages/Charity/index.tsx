@@ -163,7 +163,7 @@ const CharityDetail = () => {
           </div>
           <div className="flex items-center gap-8">
             <Button
-              onClick={handleJoin}
+              onClick={charity?.status === 'ACTIVE' ? handleJoin : undefined}
               className={
                 joined
                   ? 'bg-red-500 hover:bg-red-600 px-6'

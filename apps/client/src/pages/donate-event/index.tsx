@@ -97,7 +97,7 @@ const CharityDetail = () => {
           <Button
             className="w-full bg-[#2E7D32] hover:bg-primary-custom-color cursor-pointer"
             size={'lg'}
-            onClick={() => navigate('/donate/' + donationId)}
+            onClick={() => donation?.eventStatus === 'ACTIVE' && navigate('/donate/' + donationId)}
           >
             Quyên Góp Ngay
           </Button>
