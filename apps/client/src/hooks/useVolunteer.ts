@@ -3,8 +3,6 @@ import { RootState } from '@/stores/store'
 import { useSelector } from 'react-redux'
 import useSWR from 'swr'
 
-type TCharityStatus = 'active' | 'inactive' | 'upcoming' | 'completed'
-
 export type VolunteerListResponse = {
   id: number
   fullName: string
@@ -28,7 +26,7 @@ export function useVolunteer(filters?: { search?: string }) {
 
   const key: [string, CharityFilters?] | null = user ? [`/admin/volunteers`, filters] : null
 
-  const { data, error, isLoading, mutate } = useSWR(key, ([url, f]) =>
+  const { data, error, isLoading, mutate } = useSWR(key, ([_url, f]) =>
     user ? VolunteersService.getAllVolunteers(f as CharityFilters) : Promise.resolve([])
   )
 

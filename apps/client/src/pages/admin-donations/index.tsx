@@ -3,12 +3,9 @@ import { Button } from '@/components/ui/button'
 import { useDonationAdmin } from '@/hooks/useDonationAdmin'
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons'
 import { useState } from 'react'
-import { useNavigate } from 'react-router'
 import TableCharities from './table'
 
 const Organization = () => {
-  const navigate = useNavigate()
-
   const [filters, setFilters] = useState<{ search?: string }>()
   const { donations, isLoading, isError } = useDonationAdmin(filters)
   const [programName, setProgramName] = useState('')

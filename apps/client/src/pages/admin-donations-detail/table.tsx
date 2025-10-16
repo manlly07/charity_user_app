@@ -23,7 +23,6 @@ import {
   useReactTable
 } from '@tanstack/react-table'
 import { useMemo, useState } from 'react'
-import { useNavigate } from 'react-router'
 export type DonorResponse = {
   id: number
   volunteerId: number
@@ -40,8 +39,6 @@ interface TableCharitiesProps {
 }
 
 const TableDonor = ({ donation }: TableCharitiesProps) => {
-  const navigate = useNavigate()
-
   const columns: ColumnDef<DonorResponse>[] = [
     {
       id: 'volunteerFullName',

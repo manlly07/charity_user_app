@@ -24,7 +24,6 @@ import {
 } from '@tanstack/react-table'
 import dayjs from 'dayjs'
 import { useMemo, useState } from 'react'
-import { useNavigate } from 'react-router'
 
 export enum EJoinStatus {
   REGISTERED = 'REGISTERED',
@@ -46,8 +45,6 @@ interface TableCharitiesProps {
 }
 
 const TableVolunteer = ({ participants }: TableCharitiesProps) => {
-  const navigate = useNavigate()
-
   const columns: ColumnDef<ParticipantResponse>[] = [
     {
       id: 'volunteerFullName',

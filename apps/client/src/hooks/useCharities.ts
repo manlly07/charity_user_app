@@ -28,7 +28,7 @@ export function useCharities(filters?: { name?: string; from?: string; to?: stri
     ? [`/events/charity/${user.organizationId}`, filters]
     : null
 
-  const { data, error, isLoading, mutate } = useSWR(key, ([url, f]) =>
+  const { data, error, isLoading, mutate } = useSWR(key, ([_url, f]) =>
     user?.organizationId ? CharityService.getList(user.organizationId, f) : Promise.resolve([])
   )
 

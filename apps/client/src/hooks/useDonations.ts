@@ -19,6 +19,8 @@ export type Donation = {
   dateStart: string // ISO datetime string, ví dụ "2025-09-13T15:23:00"
   dateEnd: string
   totalDonated: string // BigDecimal → string
+  actualAmount: string // BigDecimal → string
+  targetAmount: string // BigDecimal → string
 }
 
 type DonationFilter = { name?: string; from?: string; to?: string }
@@ -30,7 +32,7 @@ export function useDonations(filters?: { name?: string; from?: string; to?: stri
     ? [`/events/donation/${user.organizationId}`, filters]
     : null
 
-  const { data, error, isLoading, mutate } = useSWR(key, ([url, f]) =>
+  const { data, error, isLoading, mutate } = useSWR(key, ([_url, f]) =>
     user?.organizationId ? DonationService.getList(user.organizationId, f) : Promise.resolve([])
   )
 

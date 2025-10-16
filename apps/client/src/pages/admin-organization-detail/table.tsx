@@ -29,8 +29,6 @@ import {
 } from '@tanstack/react-table'
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
-type TCharityStatus = 'active' | 'inactive' | 'upcoming' | 'completed'
-
 interface TableCharitiesProps {
   volunteers: VolunteerListResponse[]
 }

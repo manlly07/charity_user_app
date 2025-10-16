@@ -3,12 +3,9 @@ import { Button } from '@/components/ui/button'
 import { useRequestAdmin } from '@/hooks/useRequestAdmin'
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons'
 import { useState } from 'react'
-import { useNavigate } from 'react-router'
 import TableRequest from './table'
 
 const Request = () => {
-  const navigate = useNavigate()
-
   const [filters, setFilters] = useState<{ search?: string }>()
   const { requests, isLoading, isError } = useRequestAdmin(filters)
   const [programName, setProgramName] = useState('')

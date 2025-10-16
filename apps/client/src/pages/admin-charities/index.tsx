@@ -3,12 +3,9 @@ import { Button } from '@/components/ui/button'
 import { useCharitiesAdmin } from '@/hooks/useCharitiesAdmin'
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons'
 import { useState } from 'react'
-import { useNavigate } from 'react-router'
 import TableCharities from './table'
 
 const Charities = () => {
-  const navigate = useNavigate()
-
   const [filters, setFilters] = useState<{ search?: string }>()
   const { charities, isLoading, isError } = useCharitiesAdmin(filters)
   const [programName, setProgramName] = useState('')

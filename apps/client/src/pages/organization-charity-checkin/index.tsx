@@ -4,21 +4,19 @@ import { RootState } from '@/stores/store'
 import dayjs from 'dayjs'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { useNavigate, useParams } from 'react-router'
+import { useParams } from 'react-router'
 import useSWR from 'swr'
 import { CharityEventResponseList } from '../home'
 import TableCharityUsers from './table'
 
 const CharityDetail = () => {
   const { id } = useParams<{ id: string }>()
-  const navigate = useNavigate()
   const { user } = useSelector((state: RootState) => state.auth)
 
   const charityId = id ? parseInt(id, 10) : 0
 
-  const { data, error, isLoading, mutate } = useSWR<CharityEventResponseList | null>(
-    '/events/charity',
-    () => CharityService.getCharityById(charityId, user?.id)
+  const { data, error } = useSWR<CharityEventResponseList | null>('/events/charity', () =>
+    CharityService.getCharityById(charityId, user?.id)
   )
 
   const charity = useMemo(() => {

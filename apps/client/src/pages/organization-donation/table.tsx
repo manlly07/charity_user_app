@@ -30,17 +30,6 @@ import {
 } from '@tanstack/react-table'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router'
-type TDonationStatus = 'active' | 'inactive' | 'upcoming' | 'completed'
-
-type TDonation = {
-  id: number
-  name: string
-  image: string // URL đến ảnh đại diện
-  startDate: string // ISO date string, ví dụ: "2025-07-15"
-  donatedAmount: number
-  targetAmount: number
-  status: TDonationStatus
-}
 
 // const donations: TDonation[] = [
 //   {

@@ -27,113 +27,6 @@ import {
   useReactTable
 } from '@tanstack/react-table'
 import { useMemo, useState } from 'react'
-type TCampaign = {
-  id: number
-  name: string
-  status: 'active' | 'completed' | 'upcoming' | 'cancelled'
-  startDate: string
-  endDate: string
-  volunteers: number
-}
-
-const campaigns: TCampaign[] = [
-  {
-    id: 1,
-    name: 'Clean the Beach',
-    status: 'active',
-    startDate: '2025-07-10',
-    endDate: '2025-07-20',
-    volunteers: 45
-  },
-  {
-    id: 2,
-    name: 'Tree Planting Day',
-    status: 'completed',
-    startDate: '2025-06-01',
-    endDate: '2025-06-01',
-    volunteers: 120
-  },
-  {
-    id: 3,
-    name: 'Blood Donation Drive',
-    status: 'upcoming',
-    startDate: '2025-08-15',
-    endDate: '2025-08-15',
-    volunteers: 80
-  },
-  {
-    id: 4,
-    name: 'Community Health Camp',
-    status: 'cancelled',
-    startDate: '2025-07-01',
-    endDate: '2025-07-03',
-    volunteers: 30
-  },
-  {
-    id: 5,
-    name: 'River Cleanup Mission',
-    status: 'active',
-    startDate: '2025-07-12',
-    endDate: '2025-07-18',
-    volunteers: 60
-  },
-  {
-    id: 6,
-    name: 'Education for All',
-    status: 'completed',
-    startDate: '2025-04-10',
-    endDate: '2025-04-30',
-    volunteers: 150
-  },
-  {
-    id: 7,
-    name: 'Senior Care Outreach',
-    status: 'upcoming',
-    startDate: '2025-09-01',
-    endDate: '2025-09-07',
-    volunteers: 50
-  },
-  {
-    id: 8,
-    name: 'Animal Shelter Support',
-    status: 'active',
-    startDate: '2025-07-05',
-    endDate: '2025-07-25',
-    volunteers: 35
-  },
-  {
-    id: 9,
-    name: 'Disaster Relief Training',
-    status: 'completed',
-    startDate: '2025-05-10',
-    endDate: '2025-05-20',
-    volunteers: 100
-  },
-  {
-    id: 10,
-    name: 'School Supply Distribution',
-    status: 'cancelled',
-    startDate: '2025-07-15',
-    endDate: '2025-07-16',
-    volunteers: 25
-  },
-  {
-    id: 11,
-    name: 'Food for Homeless',
-    status: 'upcoming',
-    startDate: '2025-08-05',
-    endDate: '2025-08-10',
-    volunteers: 75
-  },
-  {
-    id: 12,
-    name: 'Public Park Revamp',
-    status: 'active',
-    startDate: '2025-07-14',
-    endDate: '2025-07-22',
-    volunteers: 90
-  }
-]
 
 type TCharityStatus = 'active' | 'inactive' | 'upcoming' | 'completed'
 
@@ -207,8 +100,8 @@ const columns: ColumnDef<TCharity>[] = [
 ]
 
 const TableOrganization = () => {
-  const [filters, setFilters] = useState<{ name?: string; from?: string; to?: string }>()
-  const { charities, isLoading, isError } = useCharities(filters)
+  const [filters, _setFilters] = useState<{ name?: string; from?: string; to?: string }>()
+  const { charities } = useCharities(filters)
 
   const table = useReactTable({
     data: charities,

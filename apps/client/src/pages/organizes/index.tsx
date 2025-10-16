@@ -49,7 +49,7 @@ const Organizes = (_props: Props) => {
     }
   }, [query])
 
-  const { data, error, mutate } = useSWR('/organizes/', async () => {
+  const { data, mutate } = useSWR('/organizes/', async () => {
     const res = await axiosInstance.get(`/events/organization/${id}`, {
       params: {
         volunteerId: user.id
@@ -58,7 +58,7 @@ const Organizes = (_props: Props) => {
     return res.data
   })
 
-  const [followed, setFollowed] = useState(data?.followed || false)
+  const [_followed, setFollowed] = useState(data?.followed || false)
 
   const handleFollow = async () => {
     try {

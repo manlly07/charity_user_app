@@ -33,7 +33,7 @@ const CharitieCreate = () => {
   const { id } = useParams<{ id: string }>()
 
   if (!id) return <Navigate to={'/login'} />
-  const { data, error } = useSWR('/donations/detail', async () => {
+  const { data } = useSWR('/donations/detail', async () => {
     const res = await axiosInstance.get(`/events/donation/${id}`)
     return res.data
   })

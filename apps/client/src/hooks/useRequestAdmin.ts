@@ -44,7 +44,7 @@ export function useRequestAdmin(filters?: { search?: string }) {
 
   const key: [string, CharityFilters?] | null = user ? [`/admin/request`, filters] : null
 
-  const { data, error, isLoading, mutate } = useSWR(key, ([url, f]) =>
+  const { data, error, isLoading, mutate } = useSWR(key, ([_url, f]) =>
     user ? RequestAminService.getAllRequests(f as CharityFilters) : Promise.resolve([])
   )
 

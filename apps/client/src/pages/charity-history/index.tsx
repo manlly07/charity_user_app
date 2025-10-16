@@ -1,4 +1,3 @@
-import { Event4, Event5, Event6, Event7 } from '@/assets'
 import SearchInput from '@/components/search'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -10,37 +9,6 @@ import { useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Navigate, useNavigate, useSearchParams } from 'react-router'
 import useSWR from 'swr'
-
-const EVENTS = [
-  {
-    image: Event4,
-    title: 'Community Food Drive Platform',
-    location: 'Local Food Bank',
-    date: 'Participated on October 15, 2023',
-    registered: 'Registered'
-  },
-  {
-    image: Event5,
-    title: 'CNeighborhood Cleanup Initiative',
-    location: 'Environmental Group',
-    date: 'Participated on September 25, 2023',
-    registered: 'Participated'
-  },
-  {
-    image: Event6,
-    title: 'Book Donation Event',
-    location: 'City Library',
-    date: 'Participated on November 10, 2023',
-    registered: 'Participated'
-  },
-  {
-    image: Event7,
-    title: 'Park Beautification Project',
-    location: 'Community Park Association',
-    date: 'Participated on August 5, 2023',
-    registered: 'Missed'
-  }
-]
 
 const CharityHistory = () => {
   const { user } = useSelector((state: RootState) => state.auth)

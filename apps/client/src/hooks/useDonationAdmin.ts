@@ -47,7 +47,7 @@ export function useDonationAdmin(filters?: { search?: string }) {
 
   const key: [string, CharityFilters?] | null = user ? [`/admin/organizations`, filters] : null
 
-  const { data, error, isLoading, mutate } = useSWR(key, ([url, f]) =>
+  const { data, error, isLoading, mutate } = useSWR(key, ([_url, f]) =>
     user ? DonationAdminService.getAllDonations(f as CharityFilters) : Promise.resolve([])
   )
 

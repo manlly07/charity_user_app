@@ -3,12 +3,9 @@ import { Button } from '@/components/ui/button'
 import { useOrganizationAdmin } from '@/hooks/useOrganizationAdmin'
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons'
 import { useState } from 'react'
-import { useNavigate } from 'react-router'
 import TableOrganization from './table'
 
 const Organization = () => {
-  const navigate = useNavigate()
-
   const [filters, setFilters] = useState<{ search?: string }>()
   const { organizations, isLoading, isError } = useOrganizationAdmin(filters)
   const [programName, setProgramName] = useState('')

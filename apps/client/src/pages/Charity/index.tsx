@@ -18,22 +18,6 @@ import { Navigate, useNavigate, useParams } from 'react-router'
 import useSWR from 'swr'
 import { CharityEventResponseList } from '../home'
 
-const REQUIREMENTS = [
-  'Age 16 or older',
-  'Commitment to 2-3 hours/week',
-  'Physical ability to work outdoors',
-  'Basic gardening knowledge helpful',
-  'Willingness to learn and adapt'
-]
-
-const WHATWILLIDO = [
-  'Plant and maintain garden beds',
-  'Participate in community workshops',
-  'Help with harvest distribution',
-  'Collaborate with local schools',
-  'Share gardening knowledge'
-]
-
 const CharityDetail = () => {
   const { user } = useSelector((state: RootState) => state.auth)
   const { id } = useParams<{ id: string }>()
@@ -41,9 +25,8 @@ const CharityDetail = () => {
   const navigate = useNavigate()
   if (!user) return <Navigate to={'/login'} />
 
-  const { data, error, isLoading, mutate } = useSWR<CharityEventResponseList | null>(
-    '/events/charity',
-    () => CharityService.getCharityById(charityId, user?.id)
+  const { data, error } = useSWR<CharityEventResponseList | null>('/events/charity', () =>
+    CharityService.getCharityById(charityId, user?.id)
   )
 
   const [joined, setJoined] = useState(false)

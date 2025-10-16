@@ -23,9 +23,9 @@ const OrganizationDetail = () => {
     OrganizationService.getOrganizationById(id!)
   )
 
-  const handleUpdateOrganization = async () => {
-    await OrganizationService.deleteOrganization(id!)
-  }
+  // const handleUpdateOrganization = async () => {
+  //   await OrganizationService.deleteOrganization(id!)
+  // }
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto p-6">

@@ -6,27 +6,6 @@ import { Link, Navigate } from 'react-router'
 import useSWR from 'swr'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 
-const Organization = [
-  {
-    id: 1,
-    name: 'Green Earth Initiative',
-    username: 'New program posted',
-    image: 'https://github.com/leerob.png'
-  },
-  {
-    id: 2,
-    name: 'City Food Bank',
-    username: '',
-    image: 'https://github.com/shadcn.png'
-  },
-  {
-    id: 3,
-    name: 'Animal Shelter Network',
-    username: 'New program posted',
-    image: 'https://github.com/evilrabbit.png'
-  }
-]
-
 const OrganizeFollow = () => {
   const { user } = useSelector((state: RootState) => state.auth)
 

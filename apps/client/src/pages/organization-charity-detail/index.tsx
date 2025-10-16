@@ -18,9 +18,8 @@ const CharityDetail = () => {
 
   const charityId = id ? parseInt(id, 10) : 0
 
-  const { data, error, isLoading, mutate } = useSWR<CharityEventResponseList | null>(
-    '/events/charity',
-    () => CharityService.getCharityById(charityId, user?.id)
+  const { data, error } = useSWR<CharityEventResponseList | null>('/events/charity', () =>
+    CharityService.getCharityById(charityId, user?.id)
   )
 
   const charity = useMemo(() => {
