@@ -114,7 +114,7 @@ const RequestOrganization = () => {
                   <FormLabel>Reason for Creating This Organization</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Tell us about your organization's mission and goals..."
+                      placeholder="Tell us about your organization's mission and goals... This will be displayed to users when they visit your organization's information"
                       className="resize-none"
                       {...field}
                     />
@@ -157,7 +157,7 @@ const RequestOrganization = () => {
               name="certificate"
               render={() => (
                 <FormItem>
-                  <FormLabel>Upload Certificate (Optional)</FormLabel>
+                  <FormLabel>Upload Certificate</FormLabel>
                   <FormControl>
                     <ImageUpload
                       className="border rounded-lg border-dashed p-6"
@@ -172,7 +172,7 @@ const RequestOrganization = () => {
                           Drop your certificate here or browse
                         </p>
                         <p className="text-text-custom-color text-sm">
-                          Supported formats: PDF, PNG, JPG (max. 10MB)
+                          Supported formats: PNG, JPG (max. 10MB)
                         </p>
                       </div>
                     </ImageUpload>

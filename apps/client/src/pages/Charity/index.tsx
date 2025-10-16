@@ -5,7 +5,6 @@ import { RootState } from '@/stores/store'
 import {
   CalendarIcon,
   CheckCircledIcon,
-  ClockIcon,
   HeartIcon,
   PaperPlaneIcon,
   PersonIcon,
@@ -209,9 +208,9 @@ const CharityDetail = () => {
             <p className="text-lg font-bold">About Us</p>
             <div className="space-y-3">
               <p className="text-text-secondary text-base text-wrap w-full">
-                {charity?.description}
+                {charity?.organization?.reason}
               </p>
-              <div className="flex items-center gap-2">
+              {/* <div className="flex items-center gap-2">
                 <PaperPlaneIcon className="text-custom-color" width={20} height={20} />
                 <span className="text-base text-text-secondary text-wrap max-w-3/4">
                   {charity?.destination}
@@ -220,7 +219,7 @@ const CharityDetail = () => {
               <div className="flex items-center gap-2">
                 <ClockIcon className="text-custom-color" width={20} height={20} />
                 <span className="text-base text-text-secondary">100+ Completed Projects</span>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

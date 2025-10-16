@@ -23,6 +23,7 @@ export type CharityEventResponseList = {
     id: number
     name: string
     avatar: string | null
+    reason: string | null
   }
 
   joined: boolean
