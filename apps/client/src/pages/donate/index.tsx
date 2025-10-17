@@ -173,7 +173,7 @@ const CharityDetail = () => {
               <FormItem>
                 <FormLabel>Tên người quyên góp</FormLabel>
                 <FormControl>
-                  <InputCustom type="email" placeholder="Enter your name" {...field} />
+                  <InputCustom type="text" placeholder="Enter your name" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

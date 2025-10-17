@@ -159,6 +159,17 @@ const OrganizationDetail = () => {
               <p className="text-base font-medium">{data?.charityRequire || '-'}</p>
             </div>
           </div>
+          <div className="space-y-6">
+            <p className="text-xl font-semibold">Banner Charity</p>
+            {!data?.charityPic && <p className="text-sm text-text-secondary">No logo available.</p>}
+            {data?.charityPic && (
+              <img
+                src={data?.organizationLogo}
+                alt={data?.charityEventName}
+                className="w-ful h-20 rounded object-cover block "
+              />
+            )}
+          </div>
         </>
       )}
       {data?.requestType === 'DONATION_REGISTRATION' && (
@@ -168,6 +179,19 @@ const OrganizationDetail = () => {
             <div className="bg-gray-50 p-4 rounded">
               <p className="text-base font-medium">{data?.donationDescription || '-'}</p>
             </div>
+          </div>
+          <div className="space-y-6">
+            <p className="text-xl font-semibold">Banner Donation</p>
+            {!data?.donationPic && (
+              <p className="text-sm text-text-secondary">No banner available.</p>
+            )}
+            {data?.donationPic && (
+              <img
+                src={data?.organizationLogo}
+                alt={data?.donationEventName}
+                className="w-ful h-20 rounded object-cover block "
+              />
+            )}
           </div>
         </>
       )}
